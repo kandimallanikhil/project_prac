@@ -1,0 +1,70 @@
+Creation of Vpc : 
+1. Hear we need to give only cidr range.
+resource "aws_vpc" "vpc_one" {
+    cidr_block = "10.0.0.0/16"
+    tags = {
+        Name = "terraform_vpc"
+    }
+enable_dns_hostnames = true   #Instances in the VPC won't get DNS names that can be used for 
+#internal resolution.If we create it through UI, it will take by default. no need to define explecetly.
+}
+# Creating a subnet : 
+1. First we need to attach our vpc to subnet.
+2. we need to assigne availabilty zone in which region we need to create our subnets.
+3. we need to set the cidr block for subnet. and also give name. 
+resource "aws_subnet" "subnet_public" {
+vpc_id = ""aws_vpc.vpc_one.id"" # 
+availability_zone = "eu-north-1a"
+map_public_ip_on_launch =true # this will ensures that the public IP will be automatically assigned
+# to all the all the instances launced in this subnet.
+# In case if we dont define it will not take any ip.
+# associate_public_ip_address = true # this can be used if we want public ID to instance.
+
+# Creating routetable.
+# 1. we need to define a name to route table.
+#  2. we need to add vpc to route table.
+resource "aws_route_table" "route_table_public"{
+vpc_id = aws_vpc.vpc_one.id
+}
+# creation a elastic ip and assigne it to internetgateway.
+resource "aws_eip" "aws_ip"{
+domain = vpc 
+# in newer AWS accounts or regions that default to VPC, Terraform will throw an error
+indicating that you cannot create an EIP without specifying the domain, as the VPC networking model is the default
+}
+# creating internet gateway.
+1. in this we need to create a IG and then attach a vpc to IG.
+and also we need to assigne a public subnet subnet.
+resource "aws_internet_gateway" "ig"
+{
+vpc_id = aws_vpc.vpc_one.id
+subnet_id= aws_subnet.subnet_public.id
+
+}
+1. Now we need to add internet gateway to public route table. 
+2. And while adding we need to add a cide block or designated Ip.
+2. So to acheive this we need to go to connect to route table and add routs.
+resource "aws_route" "route_table_route" {
+route_table_id = aws_route_table.route_table_public.id 
+# this will route this route to the route table we created
+    destination_cidr_block = "0.0.0.0/0"
+internet_gateway_id = aws_internet_gateway.ig.id
+}
+the same for private route.
+# Creating a private routte to attach a natgateway.
+resource "aws_route" "route_table_private" {
+   route_table_id  = aws_route_table.route_private.id
+    destination_cidr_block = "0.0.0.0/0"
+    nat_gateway_id         =  aws_nat_gateway.nat_gateway.id
+}
+# Now we need to associate  subnet also .
+# Associate public subnet with public route table
+resource "aws_route_table_association"  "public_rt_association" {
+subnet_id = aws_subnet.subnet_public.id
+route_table_id = aws_route_table.route_table_public.id
+}
+# # Associate private subnet with private route table
+resource "aws_route_table_association" "private_rt_association" {
+    subnet_id = aws_subnet.subnet_private.id
+    route_table_id = aws_route_table.route_private.id
+}  
