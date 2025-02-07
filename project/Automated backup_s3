@@ -1,1 +1,17 @@
 
+#!/bin/bash
+# Automated backup processes using S3 versioning and lifecycle policies, archiving data to 
+Glacier for long-term storage. 
+# Define variables
+SOURCE_DIR="/path/to/your/files"  # Directory to backup
+S3_BUCKET="s3://your-bucket-name"  # Your S3 bucket
+
+# Timestamp for uniqueness
+TIMESTAMP=$(date +"%Y-%m-%d-%H-%M-%S")
+
+# Create a backup directory on S3 with the timestamp
+aws s3 cp $SOURCE_DIR $S3_BUCKET/backup/$TIMESTAMP/ --recursive
+
+# Optional: If you want to keep a log of the backups
+echo "Backup of $SOURCE_DIR completed at $TIMESTAMP" >> /path/to/logfile.log
+
