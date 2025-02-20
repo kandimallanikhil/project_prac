@@ -1,0 +1,39 @@
+AWS 
+IAM : 
+AWS Root account can manage IAM(can control the permission of the whole AWS account and services), Billing, and Resources(Ec2,s3..)
+ARN : This will be a unique id for the resource created in AWS.
+Case 1 : If a user has allow access at the user level and the group has Denay access. The user can not access the s3.
+case 2 : If a user has denie access at the user level and the group has Allow access. The user can not access the s3.
+Note: this means if the user has an explicit deny policy (whether directly attached or via another group), the deny will take precedence and block the access.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+AWS Organizations: An organization in AWS is a collection of AWS accounts that are centrally managed.
+Each AWS account is an independent resource container with its own set of resources, users, and IAM roles.
+- > It was like we could have one account(Nikhil) as root account. and inside that we can creates multiple accounts 
+like prod,dev,stage. But all these accounts are separate the will have their own root account, users, IAM policies. But all this is linked with one root account 
+called (Nikhil) which we can use it for billing 
+- > Once user from one account can not access other account resources by default. But we need to enable cross-region access through IAM policies to access it.
+How to create a AWS organization : 
+
+Root account -> AWS organization -> ( By default we will get the root account and management account(the account which we login ))
+Select Root -> actions -> Create New OU -> OU Name -> create OU (This is not an account just the OU, to know the difference between the accounts)
+Creating an account: Select (_OU_created_above_) -> add an AWS account -> fill in the required details -> Create an AWS account.
+In case if the AWS account was inside the (_OU_created_above_) then we need to move it manually 
+Select (test account) -> action-> Move -> (_OU_created_above_) -> Move AWS account.
+-----------------
+To login to the newly created account as we don't have any credentials we need to use forgot password option to get the password, and we have email at the time of creation of the account.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+AWS ROles : Temporary access without credentials(Instead of using long-term credentials (like access keys or passwords) to manage access, roles allow temporary access and help with security and compliance.)
+1 ec2 instance will have only 1 AWS role at a time.
+1 AWS role can be assigned to multiple instances.
+Why AWS Roles are Used:
+1. Temporary Security Credentials
+2. Cross-Account Access
+Different Types of AWS Roles:
+	#(Not sure better not to take)1. IAM Roles for Users: Example: A user needing to temporarily gain admin permissions for troubleshooting.
+	2.IAM Roles for AWS Services:Example: An EC2 instance assuming a role to access S3 buckets or DynamoDB tables.
+	3.IAM Roles for Cross-Account Access:Example: A service in Account A needing to assume a role in Account B to read data from S3.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+	
+
