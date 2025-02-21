@@ -22,6 +22,22 @@ Select (test account) -> action-> Move -> (_OU_created_above_) -> Move AWS accou
 -----------------
 To login to the newly created account as we don't have any credentials we need to use forgot password option to get the password, and we have email at the time of creation of the account.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
+AWS Roles: These are not assigned to the user but they are assigned to services,
+The manin use of these roles are 
+eg : If the user is working programmatically (using the AWS SDKs, CLI, or a service), they will need 
+access keys (Access Key ID and Secret Access Key) to authenticate their actions.
+eg: we have a developer who works on some coding and whenever they need to connect to other AWS services they will use an (access key or secret key)
+to connect to AWS and they won't use the AWS UI as they should connect the code.
+case 1 > If a user was provided access to aws ec2 instance -> now he needs to access some files present in AWS s3 -> 
+but he can not access it -> Now we need to  assign a role to the user now he can access it.
+in this, we need to create a policy and attach it.
+Case 2 > We have a user who has access to s3 now he wants to push some files to s3 -> to do that he need to use (keys)
+if we assign any role without keys he can push.
+once the role is created we need to assign it to EC2 at ec2 level.
+-------------------------------------------------------------------------------------------------------------
+But this was not recommended to provide (access key or secret key) to developers.
+
+
 AWS ROles : Temporary access without credentials(Instead of using long-term credentials (like access keys or passwords) to manage access, roles allow temporary access and help with security and compliance.)
 1 ec2 instance will have only 1 AWS role at a time.
 1 AWS role can be assigned to multiple instances.
