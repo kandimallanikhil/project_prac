@@ -22,7 +22,9 @@ Select (test account) -> action-> Move -> (_OU_created_above_) -> Move AWS accou
 -----------------
 To login to the newly created account as we don't have any credentials we need to use forgot password option to get the password, and we have email at the time of creation of the account.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
-AWS Roles: These are not assigned to the user but they are assigned to services,
+AWS Roles: These are not assigned to the user but they are assigned to services, and AWS roles will be assigned to services
+in aws and from that with out using any (keys) we can access other service.
+
 The manin use of these roles are 
 eg : If the user is working programmatically (using the AWS SDKs, CLI, or a service), they will need 
 access keys (Access Key ID and Secret Access Key) to authenticate their actions.
