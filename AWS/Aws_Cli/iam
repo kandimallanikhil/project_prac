@@ -1,0 +1,44 @@
+User : 
+aws iam create-user --user-name <user-name>
+aws iam delete-user --user-name <user-name>
+aws iam list-users
+aws iam get-user --user-name <user-name>   # to get user details.
+aws iam update-user --user-name <user-name> --new-user-name <new-user-name>
+-----------------------------------------------------------------------------------------------------------------------------
+Group : 
+aws iam create-group --group-name <group-name>
+aws iam delete-group --group-name <group-name>
+aws iam list-groups
+aws iam add-user-to-group --user-name <user-name> --group-name <group-name>
+aws iam remove-user-from-group --user-name <user-name> --group-name <group-name>
+aws iam list-groups-for-user --user-name <username>
+IAM Policies Commands :
+aws iam create-policy --policy-name <policy-name> --policy-document file://<policy-document>.json
+aws iam delete-policy --policy-arn <policy-arn>
+--------------------------------------------------------------------------------------------------------------------------
+aws iam list-policies
+aws iam attach-user-policy --user-name <user-name> --policy-arn <policy-arn>
+aws iam detach-user-policy --user-name <user-name> --policy-arn <policy-arn>
+aws iam attach-group-policy --group-name <group-name> --policy-arn <policy-arn>
+aws iam detach-group-policy --group-name <group-name> --policy-arn <policy-arn>
+aws iam attach-role-policy --role-name <role-name> --policy-arn <policy-arn>
+aws iam detach-role-policy --role-name <role-name> --policy-arn <policy-arn>
+---------------------------------------------------------------------------------------------------------------------------
+Access Key Management:
+aws iam create-access-key --user-name <username>
+aws iam delete-access-key --user-name <username> --access-key-id <access-key-id>
+aws iam list-access-keys --user-name <username>
+aws iam get-access-key-last-used --access-key-id <access-key-id>
+------------------------------------------------------------------------------------------------------------------------
+Role Management:
+aws iam create-role --role-name <role-name> --assume-role-policy-document file://trust-policy.json
+aws iam delete-role --role-name <role-name>
+aws iam list-roles
+aws iam get-role --role-name <role-name>
+aws iam attach-role-policy --role-name <role-name> --policy-arn <policy-arn>
+aws iam detach-role-policy --role-name <role-name> --policy-arn <policy-arn>
+-------------------------------------------------------------------------------------------------------------------------------
+aws iam <command> help
+
+
+
