@@ -1,5 +1,5 @@
 AWS 
-IAM : 
+IAM : (User will get access to services through IAM, IAM can provide authorization and authentication)
 AWS Root account can manage IAM(can control the permission of the whole AWS account and services), Billing, and Resources(Ec2,s3..)
 ARN : This will be a unique id for the resource created in AWS.
 Case 1 : If a user has allow access at the user level and the group has Denay access. The user can not access the s3.
