@@ -1,1 +1,19 @@
+S3: Simple storage service (s3) - > We can store the files and retrieve objects in S3. 
+In s3, what we store in a bucket is an  "Object" not a file or block.
+----------------
+Create Bucket : 
+->  s3 is region-specific, We can view objects across the region but to access objects across regions or edit them we need to enable Cross-Region Replication (CRR).
+-> in s3 " Bucket name " should be unique.
+< -- > In S3 we will get 2 types of object Ownership 
+   -  ACLs disabled (), ACL enabled.
+< -- > Then we have the " Block Public access setting for this bucket " -> by default it will block all public access. 
+< -- > Bucket Versioning
+< -- > Encryption type - Used to encrypt the data stored in s3
+< -- > Bucket key 
 
+- > S3 By default will store our data in 3 AZ. So that if one AZ gets down data will be stored there in other regions.
+
+Rules & Policies : 
+--- > The S3 bucket name should be unique.
+--- > Buckets are regional-specific.
+--- > S3 object size, a single object can be uploaded up to 5TB not more than 5TB and we can upload multiple objects.
