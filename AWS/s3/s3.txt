@@ -17,3 +17,60 @@ Rules & Policies :
 --- > The S3 bucket name should be unique.
 --- > Buckets are regional-specific.
 --- > S3 object size, a single object can be uploaded up to 5TB not more than 5TB and we can upload multiple objects.
+-----------------------------------------------------------
+s3 Storage class : (this will be by default) 
+   1. S3 Standard - Use case: Frequently accessed data.
+        - High Durability, -low latency
+        -  Cost: Higher cost than other classes due to its fast access.
+       Example use case: Websites, applications, and big data analytics.
+   2. S3 Standard-IA (Infrequent Access): Use case: Less frequently accessed data that requires rapid access when needed.
+         - Lower cost than Standard, but with retrieval costs. Suitable for backups, disaster recovery, and data that is 
+            accessed less often but needs to be retrieved quickly
+         - Cost-effective, highly available. 
+         - Cost: Lower cost than Standard but higher retrieval costs.
+         - Example use case: Backups, disaster recovery data, or long-term storage that is not frequently accessed.
+   3. S3 Intelligent-Tiering: Use case: Data with unpredictable access patterns.
+      - Automatically moves data between two access tiers (frequent and infrequent access) based on changing access patterns.
+      - Ideal for data with unknown or changing access patterns.
+      - Cost: Slightly higher than S3 Standard, but automatically moves data between two access tiers (frequent and    
+           infrequent) to optimize costs.
+      - Example use case: Data where access patterns are unpredictable, like logs, backups, or datasets for machine learning.
+   4.  S3 One Zone-IA
+       - infrequently accessed data that doesn't need to be stored across multiple Availability Zones.
+       - Lower cost than Standard-IA, but data is stored in a single Availability Zone, so it is less resilient.
+       - Suitable for data that can be recreated or is not critical for high availability.
+       - Cost: Lower than S3 Standard-IA since it stores data in a single Availability Zone.
+        Example use case: Storing secondary backups, or data that is easily recreatable.
+
+  5.   S3 Glacier Instant Retrieval (mainly used for archiving data )
+      - Retrieval Time: Instant access to data, meaning you can retrieve objects within milliseconds, similar to S3 Standard.
+      - Cost: More affordable than S3 Standard and S3 Standard-IA (Infrequent Access) for storing archived data. However, 
+         retrieval is not free, and the cost per retrieval might be higher than in other classes like Standard-IA.
+   6. S3 Glacier Flexible retrieval 
+      - archival data that is rarely accessed and requires retrieval times ranging from minutes to hours.
+      - Cost: Very low storage cost but high retrieval cost.
+       Example use case: Long-term backup, archival data, or compliance data retention.
+   7. S3 Glacier Deep Archive
+      - Use case: Long-term archival storage with rare access.
+      - Performance: Retrieval can take up to 12 hours.
+      - Cost: Extremely low storage cost, the lowest among S3 classes, but retrieval costs can be high.
+      - Example use case: Data that is rarely accessed, such as legal archives or compliance data with retention policies.
+  8.  S3 Outposts
+      Use case: Data that needs to be stored on-premises, near your on-premises applications.
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
