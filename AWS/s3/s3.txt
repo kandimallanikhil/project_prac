@@ -57,8 +57,20 @@ s3 Storage class : (this will be by default)
       - Example use case: Data that is rarely accessed, such as legal archives or compliance data with retention policies.
   8.  S3 Outposts
       Use case: Data that needs to be stored on-premises, near your on-premises applications.
-      
-
+------------------------------------------------------------------------------------------------------
+s3 requestor pay : 
+Account 1 (You): Store data in an S3 bucket (with Requester Pays enabled).
+Account 2 (Another person): Accesses data from your S3 bucket.
+Without Requester Pays: Account 1 pays both storage and transfer costs, even if someone else accesses the data.
+With Requester Pays enabled: Account 1 only pays for storage, and Account 2 is responsible for the transfer costs when accessing the data.
+Requester Pays only applies when data is transferred out of S3 (for example, downloading data or transferring it to another AWS service).
+Both the bucket owner and the requester must ensure that the requester includes the x-amz-request-payer: requester header in their requests when accessing the bucket.
+    s3 -> bucket(select Bucket ) -> properties -> requester pay -> enable  -> save changes.  
+------------------------------------------------------------------------------------------
+s3 Object tagging: is a feature that allows you to assign metadata to your objects in the form of key-value pairs. 
+Amazon S3 > Buckets >Bucket name > Object > Properties > tggging.
+We can create up to 10 tags for a s3 object.
+---------------------------------------------------
 
 
 
