@@ -1,0 +1,6 @@
+-> aws sts get-caller-identity  # to know about user details on which account we are connected.
+- > aws s3 ls # to list s3 buckets.
+- > aws s3 ls s3://<< Bucket name >> #  to view the content present in the bucket but it won't show the content present in subfolders.
+-- > aws s3 ls s3://<< Bucket name >> --recursive # to list s3 buckets and content inside the subfolders .
+-> aws s3 mv s3://<< Source_Bucket_Name>>/<<Source_Object>> s3://<<Destination object >> # Move object from one bucket to other bucket
+
