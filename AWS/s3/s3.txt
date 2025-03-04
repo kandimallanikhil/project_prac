@@ -70,8 +70,50 @@ Both the bucket owner and the requester must ensure that the requester includes 
 s3 Object tagging: is a feature that allows you to assign metadata to your objects in the form of key-value pairs. 
 Amazon S3 > Buckets >Bucket name > Object > Properties > tggging.
 We can create up to 10 tags for a s3 object.
----------------------------------------------------
-
+--------------------------------------------------------------------------------
+S3 Bucket Policy : 
+By default, we will block public access to the buckets so that no one from the internet can access the bucket using the bucket URL.
+TO make it public, we need to uncheck this " Block public access (bucket settings) " and then to all access to all the objects present in that bucket we need to add a policy to that 
+- > Bucket -> Permissions -> Bucket policy - > (Generate a policy and create a bucket policy)
+{
+    "Version": "2012-10-17",
+    "Id": "Policy1741070017227",
+    "Statement": [
+        {
+            "Sid": "Stmt1741070015695",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::testing879878t6899p87/*"( Make sure that we have added " /* " at the end of the Resourse ARN as it need to provide permosiions to all the objets in the bucket.
+}
+    ]
+}
+------------------------------------------------------------------------------------------------
+To selected objects only : 
+{
+    "Version": "2012-10-17",
+    "Id": "Policy1741070017227",
+    "Statement": [
+        {
+            "Sid": "Stmt1741070015695",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::demo-terraform-eks-state-s3-bucket-eu-north-1/terraform.tfstate",
+                "arn:aws:s3:::demo-terraform-eks-state-s3-bucket-eu-north-1/Multi-Tier-With-Database.pdf"
+            ]
+        }
+    ]
+}
+-----------------------------------------------------------------------------------------------
+Pre-signed URL: Once we create an s3 bucket and upload some files to the s3 bucket, we can share the objects using the pre-signed URL.
+This URL will have some conditions: 1. Time bound (like this URL will be accessible only for 2 hr or 10 mins)
+-----
+No, your friend does not need to have their own access to your S3 bucket to use a pre-signed URL. The URL itself grants the temporary access to the specific file. They can access it directly as long as the URL is valid and has not expired.
+----------
+Bucket -> Object -> Actions ->  presigned URL -> (select the TIME) 
+The pre-signed URL includes a special token that authenticates access, meaning the recipient does not need to have direct access to your S3 bucket.
 
 
 
