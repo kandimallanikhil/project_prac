@@ -1,4 +1,5 @@
 # There are few changes with respective to done in pom.xml like 
+# this we will get from jfrog.
 # ======================================================================
 # <distributionManagement>
     <repository>
