@@ -1,24 +1,24 @@
 S3: Simple storage service (s3) - > We can store the files and retrieve objects in S3. 
-In s3, what we store in a bucket is an  "Object" not a file or block.
+In s3, what we store in a bucket is an  "Object," not a file or block.
 ----------------
 Create Bucket : 
-->  s3 is region-specific, We can view objects across the region but to access objects across regions or edit them we need to enable Cross-Region Replication (CRR).
--> in s3 " Bucket name " should be unique.
-< -- > In S3 we will get 2 types of object Ownership 
+->  s3 is region-specific. We can view objects across the region, but to access objects across regions or edit them, we need to enable Cross-Region Replication (CRR).
+-> In s3, " Bucket name " should be unique.
+< -- > In S3, we will get 2 types of object Ownership 
    -  ACLs disabled (), ACL enabled.
-< -- > Then we have the " Block Public access setting for this bucket " -> by default it will block all public access. 
+< -- > Then we have the " Block Public access setting for this bucket " -> by default, it will block all public access. 
 < -- > Bucket Versioning
 < -- > Encryption type - Used to encrypt the data stored in s3
 < -- > Bucket key 
 
-- > S3 By default will store our data in 3 AZ. So that if one AZ gets down data will be stored there in other regions.
+- > S3 By default, it will store our data in 3 AZ. So that if one AZ goes down, data will be stored there in other regions.
 
 Rules & Policies : 
 --- > The S3 bucket name should be unique.
---- > Buckets are regional-specific.
+--- > Buckets are region-specific.
 --- > S3 object size, a single object can be uploaded up to 5TB not more than 5TB and we can upload multiple objects.
 -----------------------------------------------------------
-s3 Storage class : (this will be by default) 
+s3 Storage class (this will be by default) 
    1. S3 Standard - Use case: Frequently accessed data.
         - High Durability, -low latency
         -  Cost: Higher cost than other classes due to its fast access.
@@ -40,7 +40,7 @@ s3 Storage class : (this will be by default)
        - Lower cost than Standard-IA, but data is stored in a single Availability Zone, so it is less resilient.
        - Suitable for data that can be recreated or is not critical for high availability.
        - Cost: Lower than S3 Standard-IA since it stores data in a single Availability Zone.
-        Example use case: Storing secondary backups, or data that is easily recreatable.
+        Example use case: Storing secondary backups or data that is easily recreatable.
 
   5.   S3 Glacier Instant Retrieval (mainly used for archiving data )
       - Retrieval Time: Instant access to data, meaning you can retrieve objects within milliseconds, similar to S3 Standard.
@@ -73,7 +73,7 @@ We can create up to 10 tags for a s3 object.
 --------------------------------------------------------------------------------
 S3 Bucket Policy : 
 By default, we will block public access to the buckets so that no one from the internet can access the bucket using the bucket URL.
-TO make it public, we need to uncheck this " Block public access (bucket settings) " and then to all access to all the objects present in that bucket we need to add a policy to that 
+TO make it public, we need to uncheck this " Block public access (bucket settings) " and then to all access to all the objects present in that bucket, we need to add a policy to that 
 - > Bucket -> Permissions -> Bucket policy - > (Generate a policy and create a bucket policy)
 {
     "Version": "2012-10-17",
@@ -89,7 +89,7 @@ TO make it public, we need to uncheck this " Block public access (bucket setting
     ]
 }
 ------------------------------------------------------------------------------------------------
-To selected objects only : 
+To select objects only : 
 {
     "Version": "2012-10-17",
     "Id": "Policy1741070017227",
@@ -173,6 +173,8 @@ Bucker Replication & Batch Job :
 Replication Rule: In the case of Amazon S3, replication is used to ensure that data is automatically copied from one bucket (source bucket) to another (destination bucket) based on defined rules.
 
 Replicating data from source to destination : 
+1. Another bucker in the same region and account.   2. Another bucket in the same account but a different region.
+3. Another bucket in a different region.
 
 
 
