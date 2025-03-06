@@ -175,6 +175,9 @@ Replication Rule: In the case of Amazon S3, replication is used to ensure that d
 Replicating data from source to destination : 
 1. Another bucker in the same region and account.   2. Another bucket in the same account but a different region.
 3. Another bucket in a different region.
+How to enable it: buckets(source) -> management -> replication rules -> create replication rule -> Status(what will be the status of the rule immediately after creating ) -> filter type (all objects or specific objects)-> Destination(cross region replication or same region replication) - > IAM role(as we need to communicate with other buckets we need to provide permission) -> encryption -> Destination storage class.
+-----
+Note once we create this, all the files created in the source will be stored or push to the destination automatically.
 
 
 
