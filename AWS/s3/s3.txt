@@ -169,6 +169,10 @@ Bucket Versioning: Bucket Versioning is a great feature to protect against data 
 BUT ::::::::::::: 
 If you used the option to permanently delete objects in Amazon S3 and confirmed the deletion by typing "permanently delete" (through the S3 Console or via API/CLI), then the object is permanently deleted, and the associated versions are no longer recoverable through Amazon S3.
 ============================================================================================================================
+Bucker Replication & Batch Job : 
+Replication Rule: In the case of Amazon S3, replication is used to ensure that data is automatically copied from one bucket (source bucket) to another (destination bucket) based on defined rules.
+
+Replicating data from source to destination : 
 
 
 
