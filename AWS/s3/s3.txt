@@ -110,13 +110,65 @@ To selected objects only :
 Pre-signed URL: Once we create an s3 bucket and upload some files to the s3 bucket, we can share the objects using the pre-signed URL.
 This URL will have some conditions: 1. Time bound (like this URL will be accessible only for 2 hr or 10 mins)
 -----
-No, your friend does not need to have their own access to your S3 bucket to use a pre-signed URL. The URL itself grants the temporary access to the specific file. They can access it directly as long as the URL is valid and has not expired.
+No, your friend does not need to have their own access to your S3 bucket to use a pre-signed URL. The URL itself grants temporary access to the specific file. They can access it directly as long as the URL is valid and has not expired.
 ----------
 Bucket -> Object -> Actions ->  presigned URL -> (select the TIME) 
 The pre-signed URL includes a special token that authenticates access, meaning the recipient does not need to have direct access to your S3 bucket.
+--------------------------------------------------------------------------------------------------------------------
+Encription in S3 : 
+- > Encryption in Amazon S3 (Simple Storage Service) helps protect your data at rest (when stored) and in transit (when 
+    moving between your application and S3).
+-> At Rest = Data that is stored in a system and is not currently being used or transferred.
+  Encryption at Rest = Encrypting data while it's sitting idle in storage (like files in S3), ensuring make sure that unauthorized users cannot access or read it.
+Note: The important thing about "rest" is that the data is not being actively used at the moment but is still valuable and needs protection while it sits in storage.
+There are different types of encryptions in s3 :
+1. SSE-s3 encryption: This is a feature provided by Amazon Web Services (AWS) that automatically encrypts your data when it is stored in an S3 bucket.
+Decryption: When we are using SSE-S3 (Server-Side Encryption with Amazon S3-Managed Keys) to encrypt data, decryption is handled automatically by Amazon S3 when you access your data. You don’t need to manually decrypt the data yourself.
+ - >Data Security: The encryption helps protect your data from unauthorized access, ensuring that only authorized users or 
+    services can access the plaintext data.
+2. AWS s3 SSE-KMS: For this, we need a KMS key to encrypt and decrypt the data.
+   Bucket -> Properties -> Default encryption -> edit -> " Server-side encryption with AWS Key Management Service keys (SSE-KMS) " -> we need to select our KMS keys(either create or use existing).
+-----------------------------------------------------------------------------------------------------------------
+In transist encryption: In Amazon S3, in-transit encryption refers to the encryption of data while it is being transferred between the client and the S3 service. This ensures that data is protected from unauthorized access during transmission, preventing man-in-the-middle attacks or eavesdropping while data is moving over networks.
+ -> By default, Amazon S3 uses HTTPS for encryption in transit when you interact with it. This means that all connections to Amazon S3 via the internet will be encrypted using SSL/TLS (Secure Sockets Layer/Transport Layer Security) when you use the HTTPS endpoint
+How in-transit encryption is used:
+HTTPS (SSL/TLS): In-transit encryption in S3 is typically achieved using SSL (Secure Sockets Layer) or TLS (Transport Layer Security) protocols. When you upload or download data from an S3 bucket, the connection between your client and S3 is encrypted using these protocols if you're using the HTTPS endpoint for the S3 service (rather than HTTP). This ensures that the data sent over the network is secure.
 
-
-
+**-**HTTP does not provide encryption, meaning the data transferred over HTTP is sent in plain text.
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "EnforceSSLRequests",
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": "arn:aws:s3:::your-bucket-name/*",
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "false" (This will make HTTP request transition) if we want to (Https then we need to add as true) 
+##
+In short, setting "aws:SecureTransport": "true" ensures that only HTTPS requests are allowed, and any HTTP requests will be rejected.
+Note : 
+"aws:SecureTransport": "false": Denies requests made over HTTP, only allowing HTTPS requests.
+"aws:SecureTransport": "true": Denies requests made over HTTPS, only allowing HTTP requests
+##
+        }
+      }
+    }
+  ]
+}
+===========================================================================================================================
+Bucket Versioning: Bucket Versioning is a great feature to protect against data loss, accidental deletion, or overwriting, and it can be used for a variety of use cases, including backup, recovery, compliance, and auditing.
+1. Protect Objects from Accidental Deletion or Overwriting
+2. Keep Multiple Versions of an Object &  Rollback to a Previous Version
+3. Cross-Region Replication with Versioning
+  -> You can enable Cross-Region Replication (CRR) with versioning enabled, which allows you to replicate all object 
+     versions, including the delete markers, from one S3 bucket to another in a different AWS region.
+     This provides a way to ensure that all versions of your data are backed up in another location for disaster recovery 
+     purposes.
+BUT ::::::::::::: 
+If you used the option to permanently delete objects in Amazon S3 and confirmed the deletion by typing "permanently delete" (through the S3 Console or via API/CLI), then the object is permanently deleted, and the associated versions are no longer recoverable through Amazon S3.
+============================================================================================================================
 
 
 
