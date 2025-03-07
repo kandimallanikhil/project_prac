@@ -216,46 +216,18 @@ CRR: A replication solution for S3, designed to provide permanent copies of data
 Key Correction Points:
 CloudFront does not permanently store data at the edge. It only caches data temporarily, and when the cache expires, the data is lost unless it's fetched from the origin.
 Cross-Region Replication (CRR) ensures that data is permanently replicated and stored across regions, making it suitable for disaster recovery.
-Hope that clears things up! Let me know if you need further details.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       -----------------------------
-Cloud Front: This will not store the data in edge location, but it will have some cache rules based on that it will temprarly cache the data. Once the cache was expired, the data will also expire. 
-if there is any disaster, the data in the edge location will be there only the cache expires once it was exire data will also be lost.
+Hope that clears things up! Let me know if you need further details.   
+====================-----------------------------========================================================================
+Cloud Front: This will not store the data in edge location, but it will have some cache rules based on that it will temprarly cache the data. Once the cache is expired, the data will also expire. 
+If there is any disaster, the data in the edge location will be there only until the cache expires; once it expires, data will also be lost.
 The cache expiration is based on the TTL (Time to Live) set for the cached content. Once the cached content expires, CloudFront will no longer be able to serve that content because it can’t fetch the data from the origin (since the origin is down).
-we can not recover the date directly from edge loaction as it doent store any data in edge location it was just a cache.
+We can not recover the data directly from the edge location as it doesn't store any data in the edge location; it was just a cache.
 If you need to manually retrieve the data, you could access it through the public CloudFront URL, download it, and then upload it back to the master S3 bucket manually.
-Used in which services : 
-Cross-Region Replication (CRR): In this, we will set rules once it was triggered the data will store in all the replicas permanently.If there is any disaster happend in master data will still exis in replicas.
+Used in which services: Amazon S3, API Gateway, Amazon Elastic Load Balancer (ELB), AppSync, CloudFormation, CloudTrail, Elastic Beanstalk
 
-Used in : s3.
+Cross-Region Replication (CRR): In this, we will set rules once it was triggered the data will store in all the replicas permanently. If any disaster happens in the master, data will still exist in the replicas.
+
+Used in: s3.
 
 
 
