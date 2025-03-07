@@ -228,9 +228,29 @@ Used in which services: Amazon S3, API Gateway, Amazon Elastic Load Balancer (EL
 Cross-Region Replication (CRR): In this, we will set rules once it was triggered the data will store in all the replicas permanently. If any disaster happens in the master, data will still exist in the replicas.
 
 Used in: s3.
+====================================================================================================================
+CORS (Cross-Origin Resource Sharing) is a mechanism that allows web applications running at one origin (domain) to request resources from a different origin. In simpler terms, it’s a way for the browser to enable secure sharing of resources between different domains. By default, web browsers block web pages from making requests to a domain different from the one that served the web page, which is known as the Same-Origin Policy. CORS allows you to bypass this restriction safely by defining which origins are allowed to interact with the resources on a given server
+ By default, CORS will be blocked. We need to enable it manually by applying JSON code.
 
+Note: S3 enforces a CORS policy, and by default, S3 blocks such requests if the appropriate CORS headers are not set.
+......
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": ["https://www.example.com"],
+      "AllowedMethods": ["GET", "POST"],
+      "AllowedHeaders": ["*"]
+    }
+  ]
+}
+.................................................
+Eg : we have a website
+where Bucket nikhil1 contains two objects: object1 and object2. These objects are linked, and when you access object1 through its URL, you can see content from both object1 and object2, as they are both in the same bucket and there's no CORS (Cross-Origin Resource Sharing) restriction when they're in the same origin (bucket).
 
-
+Bucket nikhil2 contains only object1 but references object2 (which is in nikhil1). When you try to access object1 in nikhil2, you encounter a CORS error because S3 does not allow cross-origin requests between two different buckets unless CORS is properly configured.
+Solution:
+To resolve this, you need to enable CORS on the bucket nikhil1 (which contains object2). This allows resources from nikhil1 to be accessed by nikhil2 (or any other bucket/domain), as long as they follow the CORS configuration rules.
+=============================================
 
 
 
