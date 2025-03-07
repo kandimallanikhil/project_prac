@@ -177,7 +177,86 @@ Replicating data from source to destination :
 3. Another bucket in a different region.
 How to enable it: buckets(source) -> management -> replication rules -> create replication rule -> Status(what will be the status of the rule immediately after creating ) -> filter type (all objects or specific objects)-> Destination(cross region replication or same region replication) - > IAM role(as we need to communicate with other buckets we need to provide permission) -> encryption -> Destination storage class.
 -----
-Note once we create this, all the files created in the source will be stored or push to the destination automatically.
+Note that once we create this, all the files created in the source will be stored or push to the destination automatically.
+----------------------------------------------------------------------------------------
+Cloud front distribution: Amazon CloudFront is a Content Delivery Network (CDN) service offered by AWS (Amazon Web Services) that helps deliver content to end users with low latency and high transfer speeds. CloudFront caches your content at multiple edge locations globally, reducing the distance between your server and the user.
+-> CloudFront caches static content (like HTML, CSS, JavaScript, images) in edge locations. This reduces the load on your origin servers and speeds up the delivery of content.
+-> CloudFront supports HTTPS with SSL/TLS encryption, which ensures that data transferred between your users and the edge locations is secure.
+There are two types of distributions:
+Web Distribution: Used for delivering web content (e.g., HTML, CSS, JavaScript, images).
+RTMP Distribution: Used for streaming media files.
+------------------------------------------------------------------------------------------------------
+CloudFront vs Cross-Region Replication (CRR)
+=====
+CloudFront:
+
+Caching at Edge Locations:
+You are correct that CloudFront doesn't store data at edge locations permanently. It caches content temporarily based on TTL (Time to Live) settings.
+Once the TTL expires, CloudFront will fetch the content again from the origin (e.g., an S3 bucket, web server) if needed. If the origin is down and there’s no fresh content in the cache, CloudFront can no longer serve the data.
+Disaster Recovery:
+
+In case of a disaster (e.g., if your origin is down), the cached content at the edge locations would be lost once it expires. This is because CloudFront doesn’t keep permanent copies of the content in edge locations; it only caches it temporarily.
+The cache expiration is driven by the TTL settings you define for your CloudFront distribution.
+Accessing Data from CloudFront:
+
+If you want to manually retrieve the cached data, you can do so through the CloudFront URL, but this is only for content that is cached at the time.
+Once the cache expires, the data is no longer available via CloudFront unless it’s fetched again from the origin, which may not be available in the case of a disaster.
+----------------------------------------
+Cross-Region Replication (CRR):
+Permanent Data Storage:
+CRR is an S3 feature where objects are automatically replicated from one S3 bucket (the source) to another S3 bucket in a different AWS region (the destination).
+Once the data is replicated, it is stored permanently in the destination bucket. Even if there’s a disaster at the source bucket’s region, the data will exist in the destination region’s S3 bucket.
+Disaster Recovery:
+CRR is a disaster recovery solution since data in one region is mirrored in another. If the primary region is down or inaccessible, you can continue to access the replicated data in the other region.
+Comparison of CloudFront vs. CRR:
+CloudFront: A content delivery network (CDN) used for distributing static and dynamic content. Data is cached at edge locations temporarily and expires based on TTL settings. It is not a permanent storage solution.
+
+CRR: A replication solution for S3, designed to provide permanent copies of data across different AWS regions, offering redundancy and disaster recovery.
+
+Key Correction Points:
+CloudFront does not permanently store data at the edge. It only caches data temporarily, and when the cache expires, the data is lost unless it's fetched from the origin.
+Cross-Region Replication (CRR) ensures that data is permanently replicated and stored across regions, making it suitable for disaster recovery.
+Hope that clears things up! Let me know if you need further details.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       -----------------------------
+Cloud Front: This will not store the data in edge location, but it will have some cache rules based on that it will temprarly cache the data. Once the cache was expired, the data will also expire. 
+if there is any disaster, the data in the edge location will be there only the cache expires once it was exire data will also be lost.
+The cache expiration is based on the TTL (Time to Live) set for the cached content. Once the cached content expires, CloudFront will no longer be able to serve that content because it can’t fetch the data from the origin (since the origin is down).
+we can not recover the date directly from edge loaction as it doent store any data in edge location it was just a cache.
+If you need to manually retrieve the data, you could access it through the public CloudFront URL, download it, and then upload it back to the master S3 bucket manually.
+Used in which services : 
+Cross-Region Replication (CRR): In this, we will set rules once it was triggered the data will store in all the replicas permanently.If there is any disaster happend in master data will still exis in replicas.
+
+Used in : s3.
+
 
 
 
