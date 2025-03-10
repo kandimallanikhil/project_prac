@@ -24,6 +24,10 @@ resource "aws_s3_bucket" "bucket_1" {
     Name        = var.Bucket_1
     Environment = "Dev"
   }
+lifecycle {
+    prevent_destroy = true  # This will prevent the bucket from being destroyed
+  }
+  
 }
 
 # Second S3 Bucket in region 2 (us-east-1)
@@ -39,5 +43,7 @@ resource "aws_s3_bucket" "bucket_2" {
 # we can not define variable inside s3 bucket, if we want i default location we need to specify in provider 
 # in case if we want to create in two s3 buckets in different location we need to use 
 # alias and providers.
+
+terraform apply --auto-approve -var-file="s3_variable.tfvars" -target="aws_s3_bucket.bucket_2"
 
 
