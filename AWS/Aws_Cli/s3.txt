@@ -1,6 +1,13 @@
 -> aws sts get-caller-identity  # to know about user details on which account we are connected.
-- > aws s3 ls # to list s3 buckets.
-- > aws s3 ls s3://<< Bucket name >> #  to view the content present in the bucket but it won't show the content present in subfolders.
--- > aws s3 ls s3://<< Bucket name >> --recursive # to list s3 buckets and content inside the subfolders .
+- > aws s3 ls                            # to list s3 buckets.
+- > aws s3 ls s3://<< Bucket name >> or || -> aws s3 ls << Bucket name >>    #  to view the content present in the bucket but it won't show the content present in subfolders.
+-- > aws s3 ls s3://<< Bucket name >> --recursive   # to list s3 buckets and content inside the subfolders .
+eg: s3>aws s3 cp D:/Devops/AWS/S3/full_s3_code/s3/ s3://demo-terraform-eks-state-s3-bucket-eu-north-1/ --recursive
+S3_sync>aws s3 sync D:\Devops\AWS\S3\full_s3_code\s3 s3://demo-terraform-eks-state-s3-bucket-eu-north-1
+Use aws s3 cp for simple, one-off copies, or when you need to copy files without checking the source and destination.
+Use aws s3 sync when you want to keep directories in sync, and need to only update modified or new files, or when you want to delete files that are no longer in the source.
 -> aws s3 mv s3://<< Source_Bucket_Name>>/<<Source_Object>> s3://<<Destination object >> # Move object from one bucket to other bucket
-
+- > >aws s3 rm s3://demo-terraform-eks-state-s3-bucket-eu-north-1/ --recursive --exclude "*" --include "*.tf*" ## to remove specific files.
+ ***************** If you are copying between two S3 buckets, you should either specify individual files or use the --recursive flag to copy all files from the source to the destination. ******************
+> aws s3 cp s3://demo-terraform-eks-state-s3-bucket-eu-north-1 s3://nikhl.k8s.local --recursive (to copy)
+>aws s3 mv s3://demo-terraform-eks-state-s3-bucket-eu-north-1 s3://nikhl.k8s.local --recursive (To Move)
