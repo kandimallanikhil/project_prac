@@ -7,7 +7,12 @@ S3_sync>aws s3 sync D:\Devops\AWS\S3\full_s3_code\s3 s3://demo-terraform-eks-sta
 Use aws s3 cp for simple, one-off copies, or when you need to copy files without checking the source and destination.
 Use aws s3 sync when you want to keep directories in sync, and need to only update modified or new files, or when you want to delete files that are no longer in the source.
 -> aws s3 mv s3://<< Source_Bucket_Name>>/<<Source_Object>> s3://<<Destination object >> # Move object from one bucket to other bucket
-- > >aws s3 rm s3://demo-terraform-eks-state-s3-bucket-eu-north-1/ --recursive --exclude "*" --include "*.tf*" ## to remove specific files.
+- > >aws s3 rm s3://demo-terraform-eks-state-s3-bucket-eu-north-1/ --recursive --exclude "*" --include "*.tf*" ## to remove specific files.  # thi will remove objects inside a bucket
  ***************** If you are copying between two S3 buckets, you should either specify individual files or use the --recursive flag to copy all files from the source to the destination. ******************
 > aws s3 cp s3://demo-terraform-eks-state-s3-bucket-eu-north-1 s3://nikhl.k8s.local --recursive (to copy)
 >aws s3 mv s3://demo-terraform-eks-state-s3-bucket-eu-north-1 s3://nikhl.k8s.local --recursive (To Move)
+> aws s3api create-bucket --bucket my-unique-bucket-name --region us-east-1
+> aws s3 rb s3://bucket-name   # to delete an empty bucket.
+> aws s3 rb s3://bucket-name --force # to delete an bucket with objects.
+>
+
