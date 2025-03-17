@@ -1,1 +1,23 @@
-hai
+3 tire architecture : 
+            1. Web Server
+            2. App Server
+            3. DB Server
+For any server, the data will be stored in the 3. DB server, which we can not read. through SQL queries 2. APP servers will check the data and send O/P.
+And 1. Web server will put the data in HTML format.so that it will be human readable format.
+So the flow will be like ------------- DB Server --> APP Server ---> Web Server. To secure the DB server we don't provide access to everyone to DB server. So every request will be sent throgh 
+App server.
+-> The load will be transferred to the web server using a Load Balancer. and LB will get the request from Users.
+1. Data Base Server: Mysql, Oracle, MongoDB, etc...
+2. APP/API server (Backend Tire): Java,Python, Nodejs,Dotnet ,GO etc...
+3. Web (Front End tire ): HTML, CSS, JavaScript, Angular, etc...
+
+There are two types of applications  1. Static Application   2. Dynamic Application
+ 1. Static Application: Front End applications are static --> Nginx, Apache, etc...
+2. Dynamic application: Backend applications are dynamic --> Tomcat etc...
+My SQL is a database server that stores the data and to segregate the data easily we will store the data in schema or tables.
+--------------------------------------------------------------------------
+For Node.Js --> Package.json ==> where we will store name, project description, dependencies, and versions. 
+build tool: npm --> It will search the package and get the required dependencies.
+java -- > pom.xml, Build tool: maven.
+python -- > requirments.txt, build tool: pip.
+
