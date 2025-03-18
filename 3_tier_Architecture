@@ -21,3 +21,54 @@ build tool: npm --> It will search the package and get the required dependencies
 java -- > pom.xml, Build tool: maven.
 python -- > requirments.txt, build tool: pip.
 
+=============================
+/etc/nginx  --> Nginx config is here
+/usr/share/nginx/html/ -> hear we need to place our website.
+/var/log/nginx/ --> Here nginx will place the logs
+/usr/share/nginx/html/index.html  --> load automatically when we hit the page.
+-----------------------------------------------------------------------------------------
+DNS(Domain Name System) - We will store the IP address in DNS. Even if we change the IP or if we restart the system, the DNS name will not change.
+
+Domain registers (this will provide domain to us) - GoDaddy, Hostinger, AWS, AZURE, etc...
+Domain names are unique in the universe.
+============================================
+What will happen when we hit a Domain name in the browser : 
+eg: nikhil.com 
+if we are using a new laptop and opening the browser for the first time, 
+------ >> First it will check its browser cache for the IP of nikhil.com. ----> If it didnt find the then Browser will contact
+OS for the IP address of nikhil.com, OS will check its cache now if it is not found ( Now as it was not present in the browser and OS)
+ISP is responsible for the DNS resolution ( Means providing IP address to DNS)
+Our OS will be enabled to contact ISP DNS resolution. then ISP DNS resolution will check its cache if it dosent found it will
+check with ROOT servers.
+Root servers: this will store all the DNS names.
+This will scan the domain we asked for.
+
+TTD : (Top level domain) eg : " .com, .in, .net, etc.... each TTD will be managed by a company. When we request a .com TTD website
+then 
+root server will inform the DNS resolver to contact " .com TTD " and it will also provide the address(of name) details.
+DNS resolver will contact .com TTDto provide the IP address
+TTD checks the status and provides the IP address of nikhil.com.
+------------------------
+Now we now how we will get an IP address but in DNS we need to give our IP details then only our Server will have an IP, by default 
+DNS will not have any IP.
+and this process is called records.
+Records : 
+A - Record: In this we need to add our public IP address
+
+Name Servers: whenever we book a domain we will get name servers for the domain.
+A Records: IP address
+CNAME: Another domain redirects
+Mx: Mail Server
+NS : name server
+SOA : Authorization
+TXT: validation purpose.
+
+
+
+
+
+
+
+
+
+
