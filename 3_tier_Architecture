@@ -82,7 +82,7 @@ only know about the VPN server we are connected to they won't know our geo locat
 222 - > Reverse Proxy : 
 ->In this only the server (the application we are accessing) is aware of proxy.
 -> Security b/w client and server.
--> acts as a Load Balancer
+-> acts as a Load Balancer (Nginx LB)
 -> 
 
 
