@@ -12,3 +12,51 @@
         }
     ]
 }
+===========================================================================================================================
+1. Effect
+Purpose: Tells whether the policy allows or denies the specified actions.
+
+Values:
+
+"Allow" – Grants permission.
+
+"Deny" – Explicitly blocks permission (even if another policy allows it).
+
+✅ 2. Action
+Purpose: Specifies what operations are permitted or denied.
+
+Format: "service:action" (or "service:*" for all actions in that service).
+
+Example:
+
+"s3:GetObject" – Allows reading an object from an S3 bucket.
+
+"s3:*" – Allows all actions in S3.
+
+"ec2:StartInstances" – Allows starting EC2 instances.
+
+✅ 3. Resource
+Purpose: Specifies which AWS resources the actions apply to.
+
+Format: Usually an ARN (Amazon Resource Name) or "*" for all resources.
+
+Examples:
+
+"*" – All S3 buckets, all EC2 instances, etc.
+
+"arn:aws:s3:::my-bucket" – A specific S3 bucket.
+
+"arn:aws:ec2:us-east-1:123456789012:instance/i-1234567890abcdef0" – A specific EC2 instance.
+
+🔐 Example in words:
+json
+Copy
+Edit
+{
+  "Effect": "Allow",
+  "Action": ["s3:*"],
+  "Resource": "*"
+}
+This means: Allow the user to perform any action in S3, on any S3 resource (all buckets, all objects).
+
+Would you like a visual cheat sheet or a safer version of a common policy?
