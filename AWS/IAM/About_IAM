@@ -51,7 +51,60 @@ Different Types of AWS Roles:
 	2.IAM Roles for AWS Services:Example: An EC2 instance assuming a role to access S3 buckets or DynamoDB tables.
 	3.IAM Roles for Cross-Account Access:Example: A service in Account A needing to assume a role in Account B to read data from S3.
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
+Example of IAM Policy : 
 
+1. Effect
+What it means: Specifies whether the statement allows or denies access.
+Allowed values: "Allow" or "Deny"
+Example:
+"Effect": "Allow" || " Effect " : "Deny" ..
+This means the policy will permit the specified actions.
+--------------
+2. Action
+What it means: Specifies the AWS service actions that are allowed or denied.( For suppose we just need to provide minimal 
+minimal access, like only read  or write access.
+Format: "service-prefix:action-name"
 
-	
+Example:
+"Action": "s3:ListBucket" - this will provide only list access on S3.
+This allows the action ListBucket on the S3 service.
 
+You can use "*" to allow all actions:
+"Action": "*": This will provide access to all the resources present in AWS.
+
+Multiple specific actions:
+
+"Action": [
+  "s3:GetObject",  ::: This will provide both get and put in S3.
+  "s3:PutObject"
+]
+------------------------------------	
+Resouce
+What it means: Specifies the resource(s) (e.g., an S3 bucket, DynamoDB table, etc.) the action applies to. 
+Format: ARN (Amazon Resource Name)
+Example:
+"Resource": "arn:aws:s3:::my-example-bucket" # In this, it will only point to a specific bucket, but not the objects present.
+"Resource": "arn:aws:s3:::my-example-bucket/*" # In this, it will only point to a specific bucket and objects present in it.
+"Resource": "*" # This will point to all the buckets present in the S3.
+---------
+"Resource": "arn:aws:s3:::my-example-bucket/*"
+✅ Full Example: IAM Policy Using All Three
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::my-example-bucket/*"
+    },
+    {
+      "Effect": "Deny",
+      "Action": "s3:DeleteObject",
+      "Resource": "arn:aws:s3:::my-example-bucket/*"
+    }
+  ]
+}
+===========================================
