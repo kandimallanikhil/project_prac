@@ -1,1 +1,78 @@
 Round 1 : 
+1. Components used to create an EC2 instance using Terraform.
+2. Uses of Provisioners in Terraform ? 
+Ans: Installing software after creating a VM, Running configuration scripts, and bootstrapping an instance.
+---------------------------------------------------
+3. Why do we need to use a provisioner for SSH connection (Wrong answer given by me)
+ANS: To SSH into an instance, we need to use the  " connection".
+---------------------------------------------------------------------------------------------------------------------
+resource "aws_instance" "web" {
+  ami           = "ami-12345678"
+  instance_type = "t2.micro"
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt update",
+      "sudo apt install -y nginx"
+    ]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("~/.ssh/id_rsa")
+    host        = self.public_ip
+  }
+}
+-------------------------------------------------------------------------------------------------------
+4. When to use a " Null" resource in Terraform.
+5. Routing policies in Route53.
+---------------------------------------------------------------------------------------------------------------
+| Routing Policy         | Description                                                                 | Use Case Example                         |
+| ---------------------- | --------------------------------------------------------------------------- | ---------------------------------------- |
+| **Simple**             | Basic DNS record with a single value or multiple values (returned randomly) | Static website, basic load balancing     |
+| **Weighted**           | Route traffic based on assigned weights                                     | Canary deployments, load testing         |
+| **Latency-based**      | Route traffic to the region with the lowest latency                         | Global apps needing low-latency response |
+| **Failover**           | Route to primary unless it's unhealthy, then route to secondary             | High availability/failover setups        |
+| **Geolocation**        | Route based on the **user's location (country/continent)**                  | Legal compliance, localized content      |
+| **Geo-proximity**      | Route based on proximity to AWS regions **with bias control**               | Fine-tuned global traffic distribution   |
+| **Multi-Value Answer** | Return multiple healthy records (basic load balancing with health checks)   | Application-level redundancy             |
+----------------------------------------------------------------------------------------------------------------------------------
+6. Why is an Inline policy?
+7. How was it different from custom-managed policies?
+🔐 Inline Policy
+Created by: The user (administrator) directly within a specific IAM user, group, or role.
+
+Attached to: Only one identity (a specific user, group, or role).
+
+Visibility: Not listed under IAM → Policies in the console.
+
+Scope: Exists only within the identity it's attached to.
+
+Deletion: Automatically deleted when the identity is deleted.
+
+🧠 Think of it as a private policy living inside a single user/role/group.
+
+🛠️ Customer Managed Policy
+Created by: The user (administrator) in the Policies section of IAM.
+
+Attached to: Multiple IAM identities — users, groups, and roles.
+
+Visibility: Visible under IAM → Policies as a standalone policy.
+
+Scope: Can be reused, modified, and versioned.
+
+Deletion: Must be manually deleted.
+--------------------------------------------------------------------------------------------------------
+8. Which CI/CD tool ? How to establish the connection.
+9. What are the different stages present in the pipeline?
+10. How do you containerize the application?
+11. How do we maintain different versions of a container, and how do we tag them?
+12. Will this deploy every time in production?
+13. What happens after if we push the image 
+14. Will you do any tests on images before pushing to Docker Hub?
+15. We deployed an application in Kubernetes using rolling updates, but we observed that the new pods are not coming how to fix it.
+16. Set -E : 
+17. responds codes [ 500 
+18. How do we moniter 
+
