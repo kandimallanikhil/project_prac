@@ -1,0 +1,17 @@
+Automated server maintenance tasks, including scheduled backups, cleanup of temporary files, and cache removal to optimize server performance. 
+-----------------------------------     ------------------------    ------------------------------    ----------------------------
+1. Scheduled Backups
+---------------------------------------------------------------------
+#!/bin/bash
+
+# Define source and destination
+source="/root/source/"
+dest="/root/destination/backup/"
+time=$(date +%Y%m%d%H%M%S)
+
+# Create a backup of the source directory
+tar -czf "$dest/backup_$time.tar.gz" -C / "${source#/}"
+
+# Optional: Clean up old backups (keep last 7 days)
+find "$dest" -type f -name "*.tar.gz" -mtime +7 -exec rm {} \;
+--------------------------------------------------------------------------
