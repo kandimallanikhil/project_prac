@@ -1,1 +1,14 @@
-NA
+Shell Scripting main Command for day-to-day activities: 
+--- >>                  awk '{print $2}' -- All lines
+Key Differences:  If we use this this will show All lines present in that “Column = 2 “ 
+Eg: 
+ 
+--- >>      awk 'NR==2{print $5}' -- Only the 5th line which means “ROW = 2 and Column = 5”
+ 
+--- >> cut command 
+This was used to cut down the values: eg : 
+O/P: 453% if we need only 453 then we need to use 
+echo “453%” | cut -d “%” -f1   O/P : 453
+ 
+>> echo “4555.7” | cut -c1-3    --- O/P is 433 first 3 numbers
+
