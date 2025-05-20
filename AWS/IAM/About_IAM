@@ -108,3 +108,28 @@ Example:
   ]
 }
 ===========================================
+ Inline Policy VS 🛠️ Customer Managed Policy
+
+🔐 Inline Policy
+Created by: The user (administrator) directly within a specific IAM user, group, or role.
+
+Attached to: Only one identity (a specific user, group, or role).
+
+Visibility: Not listed under IAM → Policies in the console.
+
+Scope: Exists only within the identity it's attached to.
+
+Deletion: Automatically deleted when the identity is deleted.
+
+🧠 Think of it as a private policy living inside a single user/role/group.
+
+🛠️ Customer Managed Policy
+Created by: The user (administrator) in the Policies section of IAM.
+
+Attached to: Multiple IAM identities — users, groups, and roles.
+
+Visibility: Visible under IAM → Policies as a standalone policy.
+
+Scope: Can be reused, modified, and versioned.
+
+Deletion: Must be manually deleted.
