@@ -64,15 +64,49 @@ Scope: Can be reused, modified, and versioned.
 
 Deletion: Must be manually deleted.
 --------------------------------------------------------------------------------------------------------
-8. Which CI/CD tool ? How to establish the connection.
+8. Which CI/CD tool? How to establish the connection.
 9. What are the different stages present in the pipeline?
 10. How do you containerize the application?
 11. How do we maintain different versions of a container, and how do we tag them?
 12. Will this deploy every time in production?
-13. What happens after if we push the image 
+13. What happens if we push the image 
 14. Will you do any tests on images before pushing to Docker Hub?
 15. We deployed an application in Kubernetes using rolling updates, but we observed that the new pods are not coming how to fix it.
 16. Set -E : 
 17. responds codes [ 500 
-18. How do we moniter 
+18. How do we monitor 
+======================================================================================================================================
+-------------------------------------------------------------------------------------------------------------------------------
+====================================================================================================================================
+1. Explain the CI/CD pipeline in detail.
+2. How do you use Terraform
+3. My primary responsibilities
+4. How complex details I worked on K8s.
+5. And how big an issue was the k8s?
+6. How many pipelines do we use?
+7. AWS high-level architecture.
+8. Sidecart container vs init container
+9. How to share the data between the host and different Docker containers how to do.
+10. How to connect multiple host namespaces in k8s.
+11. There was an application running, and the pods were not communicating with each other. What could be the issue?
+12. Difference between ansible vs terraform.
+13. Made some mistakes, and how you approach it.
+14. What kind of work are you expecting?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
