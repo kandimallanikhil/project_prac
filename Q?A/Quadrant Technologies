@@ -86,7 +86,42 @@ Deletion: Must be manually deleted.
 6. How many pipelines do we use?
 7. AWS high-level architecture.
 8. Sidecart container vs init container
+ANS: 
+INIT : 
+Run once before the main application containers start.
+Lifecycle: Sequential — each init container must complete successfully before the next starts, and all must finish before
+App containers start.Runs to completion and then exits.
+📌 Example Use Cases:
+Copying files or configs to a shared volume.
+Ensuring a dependency (like a DB) is reachable.
+Running a script to prepare an environment.
+Sidecart:
+Run alongside the main application container(s), providing supporting functionality.
+Lifecycle: Starts with the main container and shares the pod lifecycle. Can restart if the Pod does.
+✅ Characteristics:
+Runs concurrently with app containers.
+Shares networking and volumes with other containers in the Pod.
+Often used to enhance or extend main container functionality.
+📌 Example Use Cases:
+Log shippers (e.g., Fluent Bit).
+Proxy or service mesh sidecar (e.g., Envoy in Istio).
+File sync, metrics collection, or backup services.
+
 9. How to share the data between the host and different Docker containers how to do.
+| Feature     | Bind Mounts              | Docker Volumes                 |
+| ----------- | ------------------------ | ------------------------------ |
+| Path        | Host filesystem          | Docker-managed location        |
+| Portability | Less portable            | More portable                  |
+| Setup Ease  | Requires host path setup | Docker manages everything      |
+| Best For    | Direct host access       | Container-to-container sharing |
+docker volume create shared-data
+Volumes: 
+docker run -v shared-data:/data --name container1 myimage
+docker run -v shared-data:/data --name container2 myimage
+BindMount : 
+docker run -v /host/data:/container/data --name container1 myimage
+docker run -v /host/data:/container/data --name container2 myimage
+
 10. How to connect multiple host namespaces in k8s.
 11. There was an application running, and the pods were not communicating with each other. What could be the issue?
 12. Difference between ansible vs terraform.
