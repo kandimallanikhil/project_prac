@@ -22,9 +22,27 @@ Select (test account) -> action-> Move -> (_OU_created_above_) -> Move AWS accou
 -----------------
 To login to the newly created account as we don't have any credentials we need to use forgot password option to get the password, and we have email at the time of creation of the account.
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
-AWS Roles: These are not assigned to the user but they are assigned to services, and AWS roles will be assigned to services
-in aws and from that with out using any (keys) we can access other service.
+AWS Roles:In AWS IAM (Identity and Access Management), roles can be assigned to both users and services (like EC2 instances, Lambda functions, etc.), but the purpose and how they are assigned differs slightly:
+Assigned to Users:
+Roles can be assigned to IAM users to grant them specific permissions, similar to how policies are attached directly to users.
+This is typically done when a user needs to assume a role temporarily to perform certain tasks that require elevated privileges or permissions that are not part of their standard user permissions.
+The user assumes the role via the sts:assumeRole API call, which grants them the permissions associated with that role.
 
+Assigned to Services (AWS Resources):
+Roles can also be assigned to AWS services (such as EC2 instances, Lambda functions, etc.).
+In this case, the role is used to allow the service to perform actions on behalf of the user or account. For example, an EC2 instance might have an IAM role that grants it permission to read from an S3 bucket or write logs to CloudWatch.
+These roles are also assumed by the service at runtime (for instance, an EC2 instance assumes the role when it starts up).
+
+Key Differences:
+Users: Can assume a role for temporary permissions (e.g., switching roles for administrative tasks or cross-account access).
+Services: Assume roles to access AWS resources or perform actions on behalf of the user (e.g., an EC2 instance needing S3 access).
+In summary, roles can be assigned to both IAM users and AWS services, but their use cases are typically different. Users assume roles for temporary permissions, while services assume roles to interact with other AWS resources securely.
+
+
+
+
+By messaging ChatGPT, you agree to our Terms and have read our Privacy Policy. See Cookie Preferences.
+Don't share sensitive inf
 The manin use of these roles are 
 eg : If the user is working programmatically (using the AWS SDKs, CLI, or a service), they will need 
 access keys (Access Key ID and Secret Access Key) to authenticate their actions.
