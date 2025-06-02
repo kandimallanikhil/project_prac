@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Image_trivy') {
+            steps {
+               sh "trivy image 63eca18b382a"
+            }
+        }
+        stage('trivy_only_severity_high_or_low') {
+            steps {
+               sh "trivy image --severity HIGH,CRITICAL 63eca18b382a"
+            }
+        }
+        stage('trivy_print_file_jsonformat') {
+            steps {
+               sh "trivy image -f json -o high.json --severity HIGH 63eca18b382a"
+            }
+        }
+        stage('trivy_print_tabluerformat') {
+            steps {
+               sh "trivy image -f table -o critical.txt --severity CRITICAL 63eca18b382a"
+            }
+        }
+         stage('trivy_ignore_unfix') {
+            steps {
+               sh "trivy image --ignore-unfixed 63eca18b382a"
+            }
+        }
+         stage('trivy_exitcode_0') {
+            steps {
+               sh "trivy image --exit-code 0 63eca18b382a"
+            }
+        }
+        stage('trivy_all') {
+            steps {
+               sh "trivy image -f json -o result.json --severity HIGH,CRITICAL --ignore-unfixed --exit-code 0 63eca18b382a"
+            }
+        }
+        stage('trivy_exitcode_1') {
+            steps {
+               sh "trivy image --exit-code 1 --ignore-unfixed 63eca18b382a"
+            }
+        }
+    }
+}
