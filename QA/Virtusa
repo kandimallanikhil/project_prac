@@ -1,0 +1,41 @@
+Virtusa : 
+
+Round 2 : 
+1. Do you have any exposer towards AI tools in AWS.
+2. How our servers are dployed in our env. and how it was deployed.
+3. Do you handle the provisons or deployment or aws services.
+4. Which was best way to launch application AWS lambda,AWS ec2, AWS eks.
+5. Which was the more cost effective way to use in above services.
+6. I want to only use the services only when the loaad was there and servers will 
+    should be down when it was down.
+7. Why do we use AWS cloude watch and all the uses of it. 
+8. About the IAM roles and how should how should we need to denay users access from 
+    particular role. (in the code )
+9. AWS services to know the vulnarabilites in our services.
+10. What are all the AWS services we use in our env.
+11. About the rds how it was configured.
+12. And how to handle distar recove in rds.
+13. How route53 is used and why.
+14. do you use AWS EKS in our org.
+15. What was the process of handling terraform for provisons server.
+16. HOw to handle terraform in multiple user process.
+17. How terraform is configured in CI/CD pipline.
+
+Round 1 : 
+
+1. Terraform process to deploy a RDS.
+2. If we want to use the same configuration on other serves then how we need to handle.
+3. about terraform modules.
+4. How do you hande sensitive information in a terraform (like terrform password).
+5. Things we need to consider while creating a VPC.
+6. how secruty group was used.
+7. about our CI/CD pipline process.
+8. how to connect to services which are in onpremse and which are in cloud.
+9. How should we troableshoot any server which are not responding.
+10. And exp with ecs or ecr.
+11. about scripting and which we use in our day to day.
+12. How do we ensure our application is scallable and always accessable.
+13. about how we need to user asg.
+14. Blue green deployment model.
+15. Any GenAI services i was avare of.
+16.   
