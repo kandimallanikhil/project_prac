@@ -1,1 +1,51 @@
 About Trivy
+Trivy is an open-source security scanner developed by Aqua Security. It is used to detect:
+-> Vulnerabilities in OS packages and software dependencies.
+-> Misconfigurations in Infrastructure as Code (IaC) like Kubernetes, Dockerfiles, Terraform, and CloudFormation.
+-> Sensitive data (like hardcoded secrets).
+-> Software Bill of Materials (SBOM) issues.
+--------------------------
+We can use Trivy for scanning the 
+-> Container images
+-> File systems
+-> Git repositories
+-> Kubernetes manifests
+-> Terraform
+-> SBOMs (Software Bill of Materials)
+----------------------------------------------------------------------------------------
+| Tool/Environment                    | Purpose                                           |
+| ----------------------------------- | ------------------------------------------------- |
+| **Docker**                          | Image vulnerability scanning                      |
+| **Kubernetes (k8s)**                | Scanning manifests and running workloads          |
+| **Terraform/CloudFormation**        | Infrastructure as Code scanning                   |
+| **GitHub Actions**                  | Automated scanning in CI pipelines                |
+| **GitLab CI**                       | Security gate in GitLab pipelines                 |
+| **Jenkins**                         | Scanning in custom pipeline stages                |
+| **VS Code** (via extensions or CLI) | Developer-side scanning                           |
+| **File System Scans**               | Scanning source code and app dependencies locally |
+| **SBOM Scans**                      | Reviewing known components and vulnerabilities    |
+-------------------------------------- ---------------------------------------------------
+How to use : 
+1. 🐳 Docker Images -> trivy image nginx:latest
+2. 📁 File System or Source Code Projects -> trivy fs ./my-project
+3. ☁️ IaC Tools (Terraform, Kubernetes, etc.) -> 
+For Kubernetes -> trivy config ./k8s/
+For Terraform -> trivy config ./terraform/
+4. ✅ Software Bill of Materials (SBOM) Scanning -> trivy sbom sbom.json
+5. ✅ Secrets Detection -> trivy fs --scanners secret .
+------------------------------------------------------------------------------
+For K8s : 
+./k8s/deployment.yaml):
+trivy config ./k8s/
+--------------------------------------------------------------------------------------------------------------------------
+-> trivy image 63eca18b382a
+-> trivy image --severity HIGH,CRITICAL 63eca18b382a
+-> trivy image -f json -o high.json --severity HIGH 63eca18b382a
+-> trivy image -f table -o critical.txt --severity CRITICAL 63eca18b382a
+-> trivy image --ignore-unfixed 63eca18b382a
+-> trivy image --exit-code 0 63eca18b382a
+-> trivy image -f json -o result.json --severity HIGH,CRITICAL --ignore-unfixed --exit-code 0 63eca18b382a
+-> trivy image --exit-code 1 --ignore-unfixed 63eca18b382a (In case if we use this in pipline if it was not fixable it will igone)
+============================================================================
+
+
