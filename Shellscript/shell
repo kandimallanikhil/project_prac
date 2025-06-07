@@ -12,3 +12,10 @@ echo “453%” | cut -d “%” -f1   O/P : 453
  
 >> echo “4555.7” | cut -c1-3    --- O/P is 433 first 3 numbers
 
+-----------------------------------------------------------------------
+
+k=$(df -h | awk 'NR==2{print $5}' | cut -d "%" -f1)
+
+l=$(lsmem | awk 'NR==4 {print $4}' | cut -d "M" -f1)
+
+cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}')
