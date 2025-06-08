@@ -1,0 +1,81 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven'
+        jdk 'jdk17'
+    }
+    environment {
+        SCANNER_HOME = tool 'sonar_scanner'
+    }
+    stages {
+        stage('clean') {
+            steps {
+                sh "mvn clean"
+            }
+        }
+        stage('git') {
+            steps {
+                git branch: 'main', url: 'https://github.com/kandimallanikhil/Boardgame.git'
+            }
+        }
+        stage('maven_compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('mvn_test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('trivy_file_scane') {
+            steps {
+                sh "trivy fs -f table -o nikhil.html ."
+            }
+        }
+        stage('SonarQube Analsyis') {
+            steps {
+                withSonarQubeEnv('sonar_scanner') {
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=BoardGame \
+                        -Dsonar.projectKey=BoardGame \
+                        -Dsonar.java.binaries=.
+                    '''
+                }
+            }
+        }
+        stage('sonar_quality') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar_scanner'
+                }
+            }
+        }
+        stage('deploy_nexus') {
+            steps {
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar_scanner'
+                }
+            }
+        }
+        stage('mvn_package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+
+        stage('nexus') {
+            steps {
+                withMaven(globalMavenSettingsConfig: 'global-settings', jdk: 'jdk17', maven: 'maven', mavenSettingsConfig: '', traceability: true) {
+                    sh "mvn deploy"
+                }
+            }
+        }
+        stage('docker_images_build') {
+            steps {
+                sh "docker build -t kandimallanikhil/nikhil:latest ."
+            }
+        }
+    }
+}
