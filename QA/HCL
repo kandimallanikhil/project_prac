@@ -1,0 +1,16 @@
+---------- Round 1 --------------------------
+1. Any project or task which i lead.
+2. Difference between RDS and DynamoDB, And when we need to use each.
+3. How AWS cloude frount will be used to perform of an global application.
+4. How to migrate a applicate a legacy application to AWS cloude, Make sure that application was scallable,secure,HA.
+5. Multiregion architecture for HA, How to architect using aws services. And what will you do for data consistency and failover.
+6. Client need a Automatic roleback feature in terrafrom for thr infra how to acheave this.
+7. we need to create a  new service using terraform, where existing infra structure will not effect how to acheave it.
+8. How terrafrom state managment file works, And how it will be use full.
+9. Benifites of using IAC (Terraform)
+10. About terraform workspace.
+11. Service now feature that support the IT service managemnet.
+12. What is CI is importent in a project.
+13. client rerequest a role back macanisem in case of deployment failure in jenkins how to acheave this.
+14. how you implememnt a new feature in a jenkins pipline in a cloude base health care application.
+15. 
