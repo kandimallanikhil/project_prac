@@ -12,3 +12,171 @@
 | **Custom Log File Collection**                        | ❌ No                 | ✅ Yes                       |
 | **Automatic Metric Collection**                       | ✅ Basic only         | ✅ Extended (customizable)   |
 | **Integrated with CloudWatch Alarms**                 | ✅ Yes                | ✅ Yes                       |
+
+----------------------------------------------------------------------------------------------------------------------
+process to send an alarm from a Windchill worker to AWS to trigger an email if it fails.
+
+Perfect — here’s a **detailed, step-by-step summary** to **monitor a local log file**, send it to **AWS CloudWatch in near real-time**, and **trigger an email alert if the log contains "FAIL"**.
+
+## ✅ **Goal**
+Monitor a local log file (`/var/log/myapp.log`) and get **an email alert** whenever a line with `"FAIL"` appears.
+---
+## ✅ **Detailed Step-by-Step Implementation**
+---
+### 🔹 Step 1: Install CloudWatch Agent
+
+#### On Amazon Linux / RHEL:
+
+```bash
+sudo yum install amazon-cloudwatch-agent -y
+#### On Ubuntu / Debian:
+```bash
+sudo apt-get update
+sudo apt-get install amazon-cloudwatch-agent -y
+### 🔹 Step 2: Create CloudWatch Agent Configuration File
+
+Save this as `config.json` on your machine:
+
+```json
+{
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/var/log/myapp.log",
+            "log_group_name": "MyAppLogs",
+            "log_stream_name": "LocalAppStream"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+> This tells the agent which log file to watch and where to send the logs in AWS CloudWatch.
+
+### 🔹 Step 3: Start the CloudWatch Agent
+
+Run this command once to load and start the agent with your config:
+
+```bash
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m on-premise \
+  -c file:/path/to/config.json \
+  -s
+```
+
+✅ The agent now runs in the background and **automatically monitors your log file**.
+
+### 🔹 Step 4: Create Log Group & Stream (Optional if agent doesn’t auto-create)
+
+You can create them manually using AWS CLI:
+
+```bash
+aws logs create-log-group --log-group-name MyAppLogs
+aws logs create-log-stream --log-group-name MyAppLogs --log-stream-name LocalAppStream
+```
+
+> Only needed if CloudWatch Agent is not set to auto-create them (usually it does).
+
+---
+
+### 🔹 Step 5: Create a Metric Filter for “FAIL”
+
+1. Go to **CloudWatch Console → Logs → Log Groups → MyAppLogs**
+2. Select **“Create Metric Filter”**
+3. Enter:
+
+   * **Filter Pattern**: `?FAIL`
+   * **Metric Name**: `JobFailures`
+   * **Metric Namespace**: `MyAppMonitoring`
+   * **Metric Value**: `1`
+
+✅ This filter will increment the `JobFailures` metric whenever “FAIL” is found in the logs.
+
+---
+
+### 🔹 Step 6: Create an SNS Topic for Email Alerts
+
+1. Go to **SNS Console → Topics → Create Topic**
+2. Choose:
+
+   * Type: `Standard`
+   * Name: `FailureAlertTopic`
+3. Create a **subscription**:
+
+   * Protocol: `Email`
+   * Endpoint: your email address
+4. ✅ Confirm the subscription via the email you receive.
+
+---
+
+### 🔹 Step 7: Create a CloudWatch Alarm on the Metric
+
+1. Go to **CloudWatch → Alarms → Create Alarm**
+2. Select:
+
+   * **Metric Namespace**: `MyAppMonitoring`
+   * **Metric Name**: `JobFailures`
+   * **Threshold**: `Greater than or equal to 1`
+   * **Period**: `1 minute`
+3. **Action**:
+
+   * Select **"Send notification to SNS topic"**
+   * Choose `FailureAlertTopic`
+
+✅ Now, when "FAIL" is logged, the alarm triggers and SNS sends you an email.
+
+---
+
+## 🔐 Step 8: IAM Permissions Required
+
+Ensure the EC2 instance or IAM user/role running the agent has this policy:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:PutLogEvents",
+        "logs:DescribeLogStreams",
+        "logs:CreateLogStream",
+        "logs:CreateLogGroup",
+        "sns:Publish"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+---
+
+## ✅ Final Workflow
+
+1. You write a new log line:
+   `Job123: FAIL`
+2. CloudWatch Agent detects and pushes the log in **near real-time**
+3. Metric Filter matches `"FAIL"` → increments `JobFailures`
+4. Alarm triggers (if metric ≥ 1)
+5. SNS sends an **email alert to you immediately**
+
+---
+
+## 🧩 Optional Enhancements
+
+* Monitor multiple log files → Add more entries in `collect_list`.
+* Use SSM Parameter Store for managing config centrally.
+* Use `cloudwatch-agent-config-wizard` to generate the JSON file interactively.
+
+---
+
+Let me know if you'd like:
+
+* A full deployment script
+* A systemd service check
+* Or a CloudFormation template to automate the AWS-side setup
