@@ -1,0 +1,14 @@
+| Feature / Metric                                      | CloudWatch (Default) | CloudWatch Agent (Required) |
+| ----------------------------------------------------- | -------------------- | --------------------------- |
+| **EC2 CPU Utilization**                               | ✅ Yes                | ✅ Yes                       |
+| **EC2 Disk I/O (Read/Write Ops)**                     | ✅ Yes                | ✅ Yes                       |
+| **EC2 Network I/O (In/Out)**                          | ✅ Yes                | ✅ Yes                       |
+| **EC2 Memory Utilization**                            | ❌ No                 | ✅ Yes                       |
+| **EC2 Disk Usage (e.g., % used)**                     | ❌ No                 | ✅ Yes                       |
+| **Custom Metrics (e.g., app-level)**                  | ❌ No                 | ✅ Yes                       |
+| **Log Collection from EC2 (e.g., syslog)**            | ❌ No                 | ✅ Yes                       |
+| **Multi-Dimensional Metrics (e.g., per mount point)** | ❌ Limited            | ✅ Yes                       |
+| **Windows Metrics (e.g., page file usage)**           | ❌ No                 | ✅ Yes                       |
+| **Custom Log File Collection**                        | ❌ No                 | ✅ Yes                       |
+| **Automatic Metric Collection**                       | ✅ Basic only         | ✅ Extended (customizable)   |
+| **Integrated with CloudWatch Alarms**                 | ✅ Yes                | ✅ Yes                       |
