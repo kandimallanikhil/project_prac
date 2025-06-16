@@ -26,9 +26,71 @@ These are the fundamentals — everything else builds on them.
     a. Environment variable injection
     b. Volume mounts
 8. 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Cluster
+2. Node
+3. Pod
+4. Deployment
+5. Service
+6. Namespace
+7. Volume
+8. Auto-scaling
+9. Rolling Updates / Rollbacks
+10. Secrets & ConfigMaps
+11. RBAC (Role-Based Access Control)
+12. Replica set
+13. DEMONSET
+14. ingress
+15. State full & State less application.
+16. Readyness prob & livelyness prob.
+17. Node selector & Node affinity & Taint & Tollaration
+18. ConfigMaps & Secret
+19. Persistent Volumes (PVs) and Persistent Volume Claims (PVCs)
+20. Dynamic provisioning
+21. Job & CronJob
+22. Horizontal Pod Autoscaler (HPA), Vertical Pod Autoscaler (VPA), Cluster Autoscaler
+-------------------------------------------------------------------------------------------------------------------------------------------
 
+| **Category**                 | **Concept**                 | **Description**                                                            |
+|------------------------------|----------------------------|---------------------------------------------------------------------------- |
+| Core Kubernetes Components** | **Cluster**                | Group of nodes managed by Kubernetes.                                       |
+|                              | **Node**                   | Worker machine (physical or VM) that runs Pods.                             |
+|                              | **Pod**                    | Smallest deployable unit, one or more containers.                           |
+|                              | **Namespace**              | Logical partition to isolate resources within a cluster.                    |
+|                              | **ReplicaSet**             | Maintains a stable set of Pod replicas running at any time.                 |
+|                              | **Deployment**             | Declarative updates for Pods and ReplicaSets, supports rollbacks.           |
+|                              | **DaemonSet**              | Runs a copy of a Pod on all or selected nodes.                              |
+|                              | **Stateful Application**   | Applications that maintain state/data (e.g., databases).                    |
+|                              | **Stateless Application**  | Applications without persistent state (e.g., front-end web servers).        |
+|                              | **Job**                    | Runs batch tasks to completion.                                             |
+|                              | **CronJob**                | Runs Jobs on a scheduled time (like cron).                                  |
+    
+| **Networking & Exposure**    | **Service**                | Stable IP and DNS name to expose Pods internally or externally.             |
+|                              | **Ingress**                | Manages external HTTP/S access, routing to Services based on rules.         |
 
+| **Configuration Management** | **ConfigMap**              | Stores non-sensitive configuration data as key-value pairs.                 |
+|                              | **Secret**                 | Stores sensitive data securely (e.g., passwords, tokens).                   |
 
+| **Storage Management**       | **Volume**                 | Storage attached to Pods; can be ephemeral or persistent.                   |
+|                              | **Persistent Volume (PV)** | Cluster storage resource provisioned by admins.                             |
+|                              | **Persistent Volume Claim (PVC)** | User request for storage resources.                                  |
+|                              | **Dynamic Provisioning**   | Automatic creation of PVs when PVCs are made.                               |
+
+| **Scheduling &               | **Node Selector**        | Basic way to assign Pods to Nodes using labels.                               |
+|      Node Management         | **Node Affinity**          | Advanced rules for scheduling Pods onto Nodes.                              |
+|                              | **Taints & Tolerations**   | Mechanism to repel or attract Pods on certain Nodes.                        |
+
+| **Health Checks**            | **Readiness Probe**        | Checks if Pod is ready to accept traffic.                                   |
+|                              | **Liveness Probe**         | Checks if Pod is alive; restarts if failed.                                 |
+
+| **Scaling & Updates**        | **Auto-scaling**           | Automatically scales resources based on load.                               |
+|                              | **Horizontal Pod Autoscaler (HPA)** | Scales number of Pods based on metrics.                            |
+|                              | **Vertical Pod Autoscaler (VPA)** | Adjusts CPU/memory resource requests for Pods.                       |
+|                              | **Cluster Autoscaler**     | Adds/removes Nodes based on workload.                                       |
+|                              | **Rolling Updates / Rollbacks** | Updates apps with zero downtime and rollback support.                  |
+
+| **Security & Access Control**| **RBAC (Role-Based Access Control)** | Fine-grained control over permissions in the cluster.              |
+-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
