@@ -1,0 +1,37 @@
+----------- K8s ---------------
+🔹 1. Core Kubernetes Concepts
+These are the fundamentals — everything else builds on them.
+1. Cluster architecture
+    a. Master vs Worker Nodes
+    b. Control Plane components (API Server, Scheduler, Controller Manager, etcd)
+    c. Node components (kubelet, kube-proxy, container runtime)
+2. Pods
+    a. Lifecycle
+    b. Multi-container pods (sidecars, ambassadors)
+    c. Init containers
+3. ReplicaSets & Deployments
+    a. Rolling updates
+    b. Rollbacks
+    c. Strategies (Recreate, RollingUpdate)
+4. Namespaces
+    a. Resource isolation
+    b. Default vs custom namespaces
+5. Labels and Selectors
+    a. Label-based management
+    b. Set-based vs equality-based selectors
+6. Services
+    a. ClusterIP, NodePort, LoadBalancer, ExternalName
+    b. Service discovery & DNS
+7. ConfigMaps & Secrets
+    a. Environment variable injection
+    b. Volume mounts
+8. 
+
+
+
+
+
+
+
+
+
