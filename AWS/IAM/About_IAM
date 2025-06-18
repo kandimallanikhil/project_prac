@@ -151,3 +151,85 @@ Visibility: Visible under IAM → Policies as a standalone policy.
 Scope: Can be reused, modified, and versioned.
 
 Deletion: Must be manually deleted.
+-----------------------------------------------------------------------------------------------------------
+3. What are IAM policies and what types are there?
+Answer:
+IAM policies are JSON documents that define permissions.
+Types include:
+
+Identity-based policies: Attached to users, groups, or roles.
+
+Resource-based policies: Attached directly to resources (e.g., S3 bucket policies).
+
+Permissions boundaries: Limits max permissions for an IAM entity.
+
+Service Control Policies (SCPs): Used with AWS Organizations for account-wide permission management.
+
+Session policies: Passed when assuming a role or federating a user.
+--------------------------------------------------------------------------------------------------------------------------
+
+| Feature            | **IAM Policy**                                                  | **Trust Policy**                                                |
+| ------------------ | --------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Purpose**        | Defines **what actions** are allowed on **which AWS resources** | Defines **who is allowed to assume a role**                     |
+| **Attached To**    | IAM **users**, **groups**, or **roles**                         | IAM **roles** only                                              |
+| **Controls**       | **Permissions** — what the principal can do                     | **Access** — who can assume the role                            |
+| **Used With**      | IAM Users, Roles, Groups                                        | IAM Roles (via STS)                                             |
+| **Example Action** | `s3:PutObject`, `ec2:StartInstances`                            | `sts:AssumeRole`                                                |
+| **Format**         | JSON policy document with `"Action"` and `"Resource"` fields    | JSON policy with `"Principal"` and `"Action": "sts:AssumeRole"` |
+
+✅ IAM Policy Example (Identity Policy)
+Allows a user or role to read objects in an S3 bucket:
+
+json
+Copy
+Edit
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-bucket/*"
+    }
+  ]
+}
+-------------------------------------------------------------------------------------------------------------
+✅ Trust Policy Example
+Allows an EC2 service to assume a role:
+
+json
+Copy
+Edit
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+---------------------------------------------------------------------------------
+Or for cross-account access:
+
+{
+  "Effect": "Allow",
+  "Principal": {
+    "AWS": "arn:aws:iam::111122223333:role/ExternalRole"
+  },
+  "Action": "sts:AssumeRole"
+}
+----------------------------------------------------------------------------------------------------
+🧠 In Simple Terms:
+IAM Policy (permissions) says: “What this identity can do.”
+
+Trust Policy says: “Who is allowed to become this role.”
+
+Both are needed for role-based access:
+
+Trust Policy = "Who can assume me?"
+
+IAM Policy = "What can I do once assumed?"
