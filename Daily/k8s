@@ -1,1 +1,111 @@
---------------
+---------------------------- Deployment----------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydeploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mydeploy1
+  template:
+    metadata:
+      name: mypod1
+      labels:
+        name: mydeploy1
+    spec:
+      containers:
+      - name: mycontainer
+        image: nasirpatel/ci-pipeline:latest   # replace with your Docker-image pushed on Dockerhub
+        ports:
+        - containerPort: 8080
+--------------------------------------------------- Services -------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: myservice
+spec:
+  type: NodePort
+  selector:
+    name: mydeploy1
+  ports:
+    - port: 80
+      targetPort: 8080
+------------------------------------------------ Deployment -----------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prime-app
+  labels:
+    app: prime-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prime-app
+  template:
+    metadata:
+      labels:
+        app: prime-app
+    spec:
+      containers:
+      - name: prime-app
+        image: amonkincloud/amazon-prime:latest
+        ports:
+        - containerPort: 3000
+------------------------------------- Services ---------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: prime-app
+  labels:
+    app: prime-app
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30001
+  selector:
+    app: prime-app
+------------------------------ Deployment_limit_resource -------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: register-app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: register-app
+  template:
+    metadata:
+      labels:
+        app: register-app
+    spec:
+      containers:
+        - name: register-app
+          image: ashfaque9x/register-app-pipeline:1.0.0-9
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+-------------------------------------- Services -lB -----------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: register-app-service
+  labels:
+    app: register-app 
+spec:
+  selector:
+    app: register-app
+
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+  type: LoadBalancer
+------------------------------- 
