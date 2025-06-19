@@ -1,0 +1,129 @@
+Here is a complete Terraform configuration to create an Oracle RDS instance on AWS from scratch. It includes:
+
+✅ VPC
+✅ Subnets
+✅ Security Group
+✅ RDS Subnet Group
+✅ Oracle RDS Instance
+---------------------------------------------------------
+provider "aws" {
+  region = var.region
+}
+
+# Create VPC
+resource "aws_vpc" "main" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = {
+    Name = "oracle-rds-vpc"
+  }
+}
+
+# Create Subnets
+resource "aws_subnet" "subnet_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "${var.region}a"
+  tags = {
+    Name = "subnet-a"
+  }
+}
+
+resource "aws_subnet" "subnet_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "${var.region}b"
+  tags = {
+    Name = "subnet-b"
+  }
+}
+
+# Internet Gateway (optional if you want internet access)
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "oracle-igw"
+  }
+}
+
+# Create a Security Group for RDS
+resource "aws_security_group" "rds_sg" {
+  name        = "oracle-rds-sg"
+  description = "Allow Oracle RDS access"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 1521
+    to_port     = 1521
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # For demo, open to all. Restrict in production!
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "rds-security-group"
+  }
+}
+
+# DB Subnet Group
+resource "aws_db_subnet_group" "oracle_subnet_group" {
+  name       = "oracle-db-subnet-group"
+  subnet_ids = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id]
+  tags = {
+    Name = "oracle-db-subnet-group"
+  }
+}
+
+# Oracle RDS Instance
+resource "aws_db_instance" "oracle_rds" {
+  identifier              = "oracle-db-instance"
+  engine                  = "oracle-se2"
+  engine_version          = "19.0.0.0.ru-2023-10.rur-2023-10.r1"
+  instance_class          = "db.t3.medium"
+  allocated_storage       = 20
+  storage_type            = "gp2"
+  username                = var.db_username
+  password                = var.db_password
+  db_name                 = "ORCL"
+  port                    = 1521
+  vpc_security_group_ids  = [aws_security_group.rds_sg.id]
+  db_subnet_group_name    = aws_db_subnet_group.oracle_subnet_group.name
+  multi_az                = false
+  publicly_accessible     = true
+  skip_final_snapshot     = true
+  apply_immediately       = true
+
+  tags = {
+    Name = "oracle-db-instance"
+  }
+}
+------------------------------------------------ Variable.tf---------------------------------
+variable "region" {
+  description = "AWS region"
+  default     = "us-east-1"
+}
+
+variable "db_username" {
+  description = "Master DB username"
+  default     = "admin"
+}
+
+variable "db_password" {
+  description = "Master DB password"
+  default     = "SuperSecurePassword123!" # Use secrets management in production!
+}
+---------------------------------- Output.tf -------------------------------------
+output "rds_endpoint" {
+  value = aws_db_instance.oracle_rds.endpoint
+}
+
+output "rds_id" {
+  value = aws_db_instance.oracle_rds.id
+}
