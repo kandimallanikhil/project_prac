@@ -1,3 +1,198 @@
+----------------------- for Jave see only this -------------------------------------------------
+FROM openjdk:17-alpine
+WORKDIR /usr/app/
+# Use the built JAR file from the target directory
+COPY target/app.jar /usr/app/
+EXPOSE 8080
+CMD ["java", "-jar", "app.jar"]
+
+-------------------------For Nodejs see only this ----------------------------------------------------------
+FROM node:16-slim
+WORKDIR /app
+# Copy dependency files
+COPY package*.json ./
+RUN npm install
+# Copy the rest of the application code
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
+---------------------------------------- this is combing of both multistage --------------------------------------
+Multip 
+✅ Multi-stage Dockerfile Example
+Assumptions:
+Frontend (Node.js app) is in frontend/
+
+Backend (Java Spring Boot) is in backend/
+
+After building, the frontend is placed into the backend's static/ folder (like backend/src/main/resources/static/)
+
+You use Maven or Gradle to build the Java app (we'll use Maven for this example)
+
+📄 Project Structure:
+css
+Copy
+Edit
+.
+├── backend/
+│   ├── src/
+│   └── pom.xml
+├── frontend/
+│   ├── package.json
+│   └── ...
+├── Dockerfile
+├── .dockerignore
+🐳 Multi-stage Dockerfile (frontend + backend)
+Dockerfile
+Copy
+Edit
+# --------- Stage 1: Build Frontend ---------
+FROM node:16-slim as frontend-builder
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build
+
+# --------- Stage 2: Build Backend ---------
+FROM maven:3.8.7-openjdk-17-slim as backend-builder
+WORKDIR /app
+COPY backend/pom.xml .
+COPY backend/src ./src
+# Copy built frontend to backend's static directory
+COPY --from=frontend-builder /app/build ./src/main/resources/static
+RUN mvn clean package -DskipTests
+
+# --------- Stage 3: Run the Application ---------
+FROM openjdk:17-alpine
+WORKDIR /app
+COPY --from=backend-builder /app/target/*.jar app.jar
+EXPOSE 8080
+CMD ["java", "-jar", "app.jar"]
+
+----------------------------------------------------------------------------------------------------------------------------
+------------------------------ Tomcat ----------------------
+FROM tomcat:latest
+RUN cp -R  /usr/local/tomcat/webapps.dist/*  /usr/local/tomcat/webapps
+COPY /webapp/target/*.war /usr/local/tomcat/webapps
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -----------------------Java-------------------------------
 FROM openjdk:17-alpine
         
@@ -98,10 +293,7 @@ RUN npm install
 
 EXPOSE 3000
 CMD ["npm","run","dev"]
------------------------------- Tomcat ----------------------
-FROM tomcat:latest
-RUN cp -R  /usr/local/tomcat/webapps.dist/*  /usr/local/tomcat/webapps
-COPY /webapp/target/*.war /usr/local/tomcat/webapps
+
 --------------------------- Node .Js --------------------------------------
 
 # Use Node.js Alpine base image
