@@ -1,4 +1,4 @@
------------------------ for Jave see only this -------------------------------------------------
+----------------------- for Java see only this -------------------------------------------------
 FROM openjdk:17-alpine
 WORKDIR /usr/app/
 # Use the built JAR file from the target directory
@@ -44,6 +44,7 @@ Edit
 🐳 Multi-stage Dockerfile (frontend + backend)
 Dockerfile
 Copy
+----------------------------------------------------------------------------------
 Edit
 # --------- Stage 1: Build Frontend ---------
 FROM node:16-slim as frontend-builder
