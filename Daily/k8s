@@ -1,3 +1,204 @@
+------------------------------------------------- k8s_deplyment---------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydeploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mydeploy1
+  template:
+    metadata:
+      name: mypod1
+      labels:
+        name: mydeploy1
+    spec:
+      containers:
+      - name: mycontainer
+        image: nasirpatel/ci-pipeline: latest   # replace with your Docker image pushed on Dockerhub
+        ports:
+        - containerPort: 8080
+---------------------------------------services_loadbalancer----------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: my-app
+  ports:
+    - port: 80
+      targetPort: 8080
+--------------------------------------------------- services_nodeport-----------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: my-app
+  ports:
+    - port: 80
+      targetPort: 8080
+      nodePort: 30080  # Optional; if omitted, K8s assigns a random port in 30000–32767
+--------------------------------------------------services_clusteri--------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-clusterip
+spec:
+  type: ClusterIP
+  selector:
+    app: my-app
+  ports:
+    - port: 80
+      targetPort: 8080
+-------------------------------------------------services_externalnme--------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-db
+spec:
+  type: ExternalName
+  externalName: database.example.com
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---------------------------- Deployment----------------------------------
 apiVersion: apps/v1
 kind: Deployment
