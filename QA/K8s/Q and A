@@ -288,3 +288,82 @@ kubectl describe svc – validate Service
 Test internally with busybox
 Confirm external access (NodePort or LoadBalancer)
 ---------------------------------------------------------------------------------------------------------------------------
+ Q. What’s a ConfigMap vs. Secret? How do you use them in Kubernetes deployments?
+ANS : 
+
+| Feature        | ConfigMap            | Secret                          |
+| -------------- | -------------------- | ------------------------------- |
+| Purpose        | Non-sensitive config | Sensitive data                  |
+| Storage        | Plain text (etcd)    | Base64-encoded (can encrypt)    |
+| Access Control | Less restrictive     | More restrictive                |
+| Use Cases      | App configs, flags   | Passwords, tokens, certificates |
+---------------------------------------------------------------------------
+🟢 What is a ConfigMap?
+A ConfigMap is used to store non-sensitive configuration data in key-value pairs.
+
+Example uses:
+App configuration
+Environment variables
+Command-line arguments
+Properties files
+✅ Data is stored unencrypted.
+
+🟢 What is a Secret?
+A Secret is similar to a ConfigMap, but it’s meant to store sensitive data. 
+like:
+Passwords
+API keys
+TLS certificates
+Kubernetes encodes Secrets in base64, and you can integrate encryption at rest.
+✅ Access is restricted via RBAC.
+-------------------------
+🟢 How to Create Them
+✅ ConfigMap Example
+         ->  kubectl create configmap app-config-- from-literal=APP_MODE=production
+✅ Secret Example
+
+        -> kubectl create secret generic db-secret-- from-literal=DB_PASSWORD=MySecret123
+----------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+      - name: my-app
+        image: nginx
+        env:
+        - name: APP_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: APP_MODE
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DB_PASSWORD
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+        - name: secret-volume
+          mountPath: /etc/secret
+          readOnly: true
+      volumes:
+      - name: config-volume
+        configMap:
+          name: app-config
+      - name: secret-volume
+        secret:
+          secretName: db-secret
+-------------------------------------------------------------------------
+
