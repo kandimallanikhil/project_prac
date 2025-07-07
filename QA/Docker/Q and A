@@ -115,8 +115,6 @@ Use multi-stage builds to discard build dependencies.
 Example:
 
 dockerfile
-Copy
-Edit
 LABEL maintainer="devops@example.com" \
       version="1.0" \
       description="Production-ready Docker image"
@@ -129,8 +127,6 @@ CMD: Provides default arguments.
 Example:
 
 dockerfile
-Copy
-Edit
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
 ✅ 11️⃣ Keep Layers Cache-Friendly
 
@@ -143,16 +139,13 @@ Remove caches or build artifacts.
 Example:
 
 dockerfile
-Copy
-Edit
 RUN apt-get update && apt-get install -y build-essential \
   && rm -rf /var/lib/apt/lists/*
 🟢 Example: Production-Ready Node.js Dockerfile
 Here’s a complete example:
 
 dockerfile
-Copy
-Edit
+
 # Build Stage
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -171,25 +164,41 @@ RUN npm ci --only=production
 # Create non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
-
 EXPOSE 3000
-
 HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/health || exit 1
 
 CMD ["node", "dist/main.js"]
 ✅ If asked in interviews, always mention:
 
 Minimal base images
-
 Multi-stage builds
-
 No secrets in image
-
 No latest tags
-
 Non-root user
-
 Healthchecks
-
 .dockerignore
 ---------------------------------------------------------------------------------
+Q: how do you pass the environment variables on docker build command.
+ANS : 
+There are three main ways to pass environment variables when building Docker images. Each serves a different purpose
+depending on whether you want the variable only during build or included in the final image
+  1. 🟢 1️⃣ Using --build-arg (Recommended for Build-Time Variables)
+🔸 Dockerfile:
+        ARG APP_ENV
+        RUN echo "Building for environment: $APP_ENV"
+🔸 Command:
+docker build --build-arg APP_ENV=production -t my-image .
+---------------------------------------
+2. 🟢 2️⃣ Using ENV (Sets Variable in the Final Image)
+Use ENV in the Dockerfile to make variables available at runtime in containers.
+🔸 Dockerfile:
+ENV APP_ENV=production
+✅ This value will be available inside the container when it runs:
+  -> docker run my-image env
+🟢 3️⃣ Combine ARG + ENV for Dynamic Runtime Value
+dockerfile
+
+ARG APP_ENV
+ENV APP_ENV=${APP_ENV}
+    -> docker build --build-arg APP_ENV=staging -t my-app .
+✅ The variable is available both during build and in the final image.
