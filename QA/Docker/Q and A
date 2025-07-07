@@ -1,0 +1,26 @@
+Q.   What is multi stage docker build?
+Ans : 
+It’s a Docker build technique where you use multiple FROM statements in one Dockerfile to create separate stages.
+One stage does the building. Another stage copies only the final build artifacts.
+This way, you avoid keeping unnecessary files, dependencies, or tools in the final image, making it smaller and more secure.
+
+✅ Why Use It?
+Reduce image size.
+Avoid leaking sensitive build tools or credentials.
+Simplify your build process in a single Dockerfile.
+
+✅ Example: Java Maven Multi-Stage Build
+
+# Stage 1 - Build
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Stage 2 - Runtime
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+COPY --from=build /app/target/myapp.jar myapp.jar
+ENTRYPOINT ["java", "-jar", "myapp.jar"]
+-----------------------------------------------------------------------------------------
