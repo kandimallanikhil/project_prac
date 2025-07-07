@@ -1,0 +1,16 @@
+1. ⁠What in Pod Disruption Budget (PDB) in K8s
+ANS : A PDB defines how many pods of a replicated application can be unavailable during voluntary disruptions
+      (e.g., node drain, cluster upgrade, or maintenance).
+       It helps maintain application availability while performing operations that might evict pods.
+   It does not prevent involuntary disruptions (like node crashes).
+------------------------------------------------------------
+when to use RollingUpdate and PDB.
+Use **RollingUpdate** for **app version upgrades** to control pod rollout, and use a **Pod Disruption Budget (PDB)** to
+**protect availability during cluster-level operations** like node upgrades, autoscaling, or preemptions.
+| Use Case               | Use RollingUpdate | Use PDB      |
+| ---------------------- | ----------------- | ------------ |
+| App version upgrade    | ✅ Yes             | ❌ Not needed |
+| Node upgrade (`drain`) | ❌ No              | ✅ Yes        |
+| Cluster autoscaling    | ❌ No              | ✅ Yes        |
+| Pod preemption         | ❌ No              | ✅ Yes        |
+----------------------------------------------------------------------------------------------------------------------------
