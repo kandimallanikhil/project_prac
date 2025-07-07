@@ -188,4 +188,103 @@ All traffic in/out of the Pod passes through the sidecar
 ✅ Purpose: App stays clean — networking magic happens in sidecar
 
 --------------------------------------------------------------------------------------------------------------------------
+Q. What are the services? Explain different types of services in Kubernetes?
+ANS : 
+ Kubernetes services enables communication between various components within or outside the application
+     1.  cluster ip: Facilitates internal communication with other apps in your cluster, no external access and its the 
+        default Kubernetes service.
+     2. Node Port: Open a specific port on the node and forward traffic to pod via the service, port to choose from 30000:32767
+     3.  Load Balancer: Load Balancer, which will route the traffic from the external to the service. 
+        standard way to expose your application to the internet 
+-----------------------------------------------------------------------------------------------------------------------------
+Q. How to debug specific container logs? Consider there sre 2 containers running inside a single POD
+ANS: 
+ . Standard ways to check pods' logs are
+   ->  kubectl log -f pod_name
+ . But if 2 containers are running inside the same pod, you need to specify the container name
+    -> kubectl log -f pod_name container_name
 
+--------------------------------------------------------------------------------------------------
+Q. The recently created Nginx pod status is pending. Find out, why?
+ANS : 
+When a pod is stuck in Pending, it means Kubernetes hasn’t been able to schedule it on any node yet.
+| Problem                          | Typical Error in Events                           |
+| -------------------------------- | ------------------------------------------------- |
+| No available resources (CPU/mem) | `0/3 nodes are available: Insufficient cpu.`      |
+| Node taints                      | `No nodes available to schedule pods.`            |
+| PVC not bound                    | `pod has unbound PersistentVolumeClaims`          |
+| Wrong nodeSelector               | `node(s) didn't match node selector`              |
+| Affinity constraints             | `node(s) didn't match pod affinity/anti-affinity` |
+-----------------------------------------------------------------------------------------
+✅ Quick Checklist to fix:
+
+If it’s resource shortage: scale your nodes up.
+If it’s taint: add toleration or remove taint.
+If PVC is pending: create matching PersistentVolume.
+If nodeSelector is wrong: adjust labels or selectors.
+
+Here’s a step-by-step process you can follow to find the root cause:
+🔹 1️⃣ . Describe the Pod
+This is always the first command you should run:
+
+      - > kubectl describe pod <pod-name>
+✅ Check carefully under:
+
+Events: This section will usually tell you exactly why it’s Pending.
+Common messages you might see:
+0/3 nodes are available: 3 Insufficient cpu.
+0/3 nodes are available: 3 node(s) had taint {key=value: NoSchedule}
+persistentvolumeclaim is not bound
+-------------------------------------
+🔹 2️⃣ Check Node Resources
+If there are no scheduling errors in events, it might be resource exhaustion:
+
+✅ List nodes and see available resources:
+
+        - > kubectl describe nodes or kubectl get nodes -o wide
+
+✅ Look for:
+
+Allocatable CPU / memory
+Disk pressure
+Memory pressure
+Node conditions (Ready, NotReady)
+------------------------------------------------------
+🔹 3️⃣ Check for Taints
+Nodes may have taints preventing scheduling:
+    -> kubectl describe nodes | grep -A5 Taints
+Taints: node-role.kubernetes.io/master:NoSchedule
+This means only pods with proper tolerances can run there.
+------------------------------------------------------
+🔹 4️⃣ Check PersistentVolume Claims
+If your pod uses a PVC, make sure it is Bound:
+   - > kubectl get pvc
+✅ If you see Pending here, the pod will also stay Pending.
+-------------------------------------
+🔹 5️⃣ Check Pod Affinity / Anti-Affinity Rules
+Your pod spec might have scheduling rules that can’t be satisfied.
+✅ Review your pod YAML:
+
+kubectl get pod <pod-name> -o yaml
+Look under:
+affinity
+nodeSelector
+tolerations
+-----------------------------------------------------------------------------------------------------------------
+Q. Previously created Nginx webserver deployed successfully, but the web page is not accessible, find out, why?
+ANS : 
+| Cause                                   | What to Check                     |
+| --------------------------------------- | --------------------------------- |
+| Nginx not listening on port 80          | Pod logs, netstat inside pod      |
+| Service misconfigured                   | Wrong selector or targetPort      |
+| Port blocked by firewall/security group | Cloud firewall rules              |
+| NodePort not exposed                    | Confirm NodePort value and access |
+| NetworkPolicy blocking                  | Check network policies            |
+| LoadBalancer pending                    | EXTERNAL-IP assigned              |
+-------------------------------------------------------------------------------
+kubectl get pods – confirm Running
+kubectl logs – look for Nginx errors
+kubectl describe svc – validate Service
+Test internally with busybox
+Confirm external access (NodePort or LoadBalancer)
+---------------------------------------------------------------------------------------------------------------------------
