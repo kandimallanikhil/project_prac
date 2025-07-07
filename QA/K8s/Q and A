@@ -366,4 +366,31 @@ spec:
         secret:
           secretName: db-secret
 -------------------------------------------------------------------------
+Q. ✅ How do you handle resource limits and requests in Kubernetes?
+ANS : 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+-----------------------------------------------------------------------------------------------
 
