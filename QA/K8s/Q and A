@@ -393,4 +393,44 @@ spec:
             memory: "256Mi"
             cpu: "500m"
 -----------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+Q:  How does Kubernetes manage scaling and self-healing?
+ANS :
+🟢 Summary Answer for Interviews
+Kubernetes manages scaling using:
 
+Horizontal Pod Autoscaler (HPA) for scaling pods based on metrics.
+Vertical Pod Autoscaler (VPA) for tuning resources.
+Cluster Autoscaler for scaling nodes.
+
+It provides self-healing through:
+ReplicaSets recreating failed pods.
+Probes monitor health and restart containers.
+Automatic rescheduling of pods on healthy nodes if failures occur.
+🟢 2️⃣ Self-Healing in Kubernetes
+Self-healing = Kubernetes automatically detects and recovers from failures.
+
+✅ Examples:
+If a pod crashes, the ReplicaSet controller creates a replacement pod.
+If a node goes down, pods are rescheduled on other healthy nodes.
+If a container becomes unhealthy, Kubernetes restarts it.
+
+✅ How?
+Liveness Probes: Detect if a container is stuck.
+Readiness Probes: Detect if a container is ready to serve traffic.
+Controllers: Continuously compare actual vs. desired state.
+---------------------------------------------------------------------------------------------------------------
+ Q: What’s the difference between rolling update and recreate strategy in Kubernetes?
+ANS: RollingUpdate gradually updates pods without downtime and is the default strategy.
+Recreate stops all pods before creating new ones, causing downtime but ensuring no overlap between old and new versions.
+| Feature         | RollingUpdate               | Recreate                                 |
+| --------------- | --------------------------- | ---------------------------------------- |
+| Downtime        | No                          | Yes                                      |
+| Pod replacement | Gradual, one-by-one         | All old pods stopped first               |
+| Use case        | Most production deployments | Single-instance or incompatible versions |
+--------------------------------------------------------------------------------------------
+Recreate : 
+strategy:
+  type: Recreate
+
+----------------------------------------------------------------------------------------------------------------------
