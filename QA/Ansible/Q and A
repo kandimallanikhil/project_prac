@@ -1,0 +1,9 @@
+Q.  What is Ansible Vault?
+ANS : Ansible Vault is a feature in Ansible that allows you to securely store sensitive data such as:
+
+Passwords
+API keys
+SSH private keys
+Cloud credentials
+It encrypts these values so you can safely commit them to version control (like Git) without exposing secrets.
+-----------------------------------------------------------------------------------------------------------------------
