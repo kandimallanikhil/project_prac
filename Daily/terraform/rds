@@ -5,7 +5,255 @@ Here is a complete Terraform configuration to create an Oracle RDS instance on A
 ✅ Security Group
 ✅ RDS Subnet Group
 ✅ Oracle RDS Instance
----------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+📁 File Structure
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── terraform.tfvars
+-----------------------------------------
+✅ main.tf
+provider "aws" {
+  region = var.aws_region
+}
+
+# Create VPC
+resource "aws_vpc" "main" {
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  tags = {
+    Name = "oracle-vpc"
+  }
+}
+
+# Create Internet Gateway
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "oracle-igw"
+  }
+}
+
+# Create Public Subnets
+resource "aws_subnet" "public" {
+  count             = length(var.public_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.public_subnet_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "public-subnet-${count.index}"
+  }
+}
+
+# Create Private Subnets
+resource "aws_subnet" "private" {
+  count             = length(var.private_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
+  map_public_ip_on_launch = false
+  tags = {
+    Name = "private-subnet-${count.index}"
+  }
+}
+
+# Public Route Table
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+  tags = {
+    Name = "public-route-table"
+  }
+}
+
+resource "aws_route_table_association" "public" {
+  count          = length(aws_subnet.public)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+-----------------------------------------------------
+# Security Group for RDS
+resource "aws_security_group" "rds_sg" {
+  name        = "oracle-rds-sg"
+  description = "Allow Oracle DB access"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 1521
+    to_port     = 1521
+    protocol    = "tcp"
+    cidr_blocks = var.allowed_cidrs
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "oracle-rds-sg"
+  }
+}
+-----------------------------------------------------
+# RDS Subnet Group
+resource "aws_db_subnet_group" "oracle_subnet_group" {
+  name       = "oracle-subnet-group"
+  subnet_ids = aws_subnet.private[*].id
+  tags = {
+    Name = "Oracle RDS Subnet Group"
+  }
+}
+-----------------------------------------------------------
+# RDS Parameter Group
+resource "aws_db_parameter_group" "oracle_param_group" {
+  name        = "oracle-param-group"
+  family      = "oracle-se2-19"
+  description = "Custom Oracle Parameter Group"
+
+  parameter {
+    name  = "open_cursors"
+    value = "500"
+  }
+
+  parameter {
+    name  = "session_cached_cursors"
+    value = "100"
+  }
+}
+----------------------------------------------------------------------------
+# RDS Option Group
+resource "aws_rds_option_group" "oracle_opt_group" {
+  name                     = "oracle-opt-group"
+  engine_name              = "oracle-se2"
+  major_engine_version     = "19"
+  option_group_description = "Oracle Option Group"
+
+  option {
+    option_name = "OEM"
+  }
+}
+-----------------------------------------------------------------------------
+# RDS Oracle Instance
+resource "aws_db_instance" "oracle" {
+  identifier              = "oracle-rds-db"
+  engine                  = "oracle-se2"
+  engine_version          = var.engine_version
+  instance_class          = var.instance_class
+  allocated_storage       = var.allocated_storage
+  storage_type            = "gp2"
+  username                = var.db_username
+  password                = var.db_password
+  db_name                 = var.db_name
+  db_subnet_group_name    = aws_db_subnet_group.oracle_subnet_group.name
+  vpc_security_group_ids  = [aws_security_group.rds_sg.id]
+  option_group_name       = aws_rds_option_group.oracle_opt_group.name
+  parameter_group_name    = aws_db_parameter_group.oracle_param_group.name
+  multi_az                = var.multi_az
+  backup_retention_period = 7
+  monitoring_interval     = 60
+  publicly_accessible     = false
+  skip_final_snapshot     = true
+  auto_minor_version_upgrade = true
+  deletion_protection     = false
+
+  tags = {
+    Name = "Oracle-RDS"
+  }
+}
+---------------------------------------------------------------------------------------------------------------------
+📄 variables.tf
+
+variable "aws_region" {
+  default = "us-east-1"
+}
+
+variable "vpc_cidr" {
+  default = "10.0.0.0/16"
+}
+
+variable "public_subnet_cidrs" {
+  type    = list(string)
+  default = ["10.0.1.0/24", "10.0.2.0/24"]
+}
+
+variable "private_subnet_cidrs" {
+  type    = list(string)
+  default = ["10.0.3.0/24", "10.0.4.0/24"]
+}
+
+variable "availability_zones" {
+  type    = list(string)
+  default = ["us-east-1a", "us-east-1b"]
+}
+
+variable "allowed_cidrs" {
+  type    = list(string)
+  default = ["0.0.0.0/0"]  # CHANGE FOR PROD!
+}
+
+variable "db_username" {}
+variable "db_password" {
+  sensitive = true
+}
+
+variable "db_name" {
+  default = "ORCL"
+}
+
+variable "instance_class" {
+  default = "db.t3.medium"
+}
+
+variable "allocated_storage" {
+  default = 20
+}
+
+variable "multi_az" {
+  default = false
+}
+
+variable "engine_version" {
+  default = "19.0.0.0.ru-2023-10.rur-2023-10.r1"
+}
+📄 outputs.tf
+
+output "rds_endpoint" {
+  value = aws_db_instance.oracle.endpoint
+}
+
+output "rds_port" {
+  value = aws_db_instance.oracle.port
+}
+-----------------------------------------------------------------------------------------------------------------------
+📄 terraform.tfvars (example values)
+db_username     = "admin"
+db_password     = "SuperSecurePassword123!"
+-----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
 provider "aws" {
   region = var.region
 }
