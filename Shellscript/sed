@@ -1,0 +1,192 @@
+------------------------------------------------
+| Command | Description                         |
+| ------- | ----------------------------------- |
+| `i`     | Insert line **before** match/line   |
+| `a`     | Append line **after** match/line    |
+| `c`     | Change (replace) the entire line    |
+| `d`     | Delete line(s)                      |
+| `s`     | Substitute text (replace string)    |
+| `n`     | Read and display the next line      |
+| `e`     | Execute a shell command (GNU `sed`) |
+| `p`     | Print line(s)                       |
+| `q`     | Quit after a certain line           |
+--------------------------------------------------
+| Command             | Replaces             |
+| ------------------- | -------------------- |
+| `sed 's/old/new/'`  | First "old" per line |
+| `sed 's/old/new/g'` | All "old"s per line  |
+-----------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
+1. i – Insert before
+bash
+Copy
+Edit
+sed '2i\Inserted before line 2' file.txt
+Input (file.txt):
+
+scss
+Copy
+Edit
+Line one
+Line two
+Line three
+Output:
+
+pgsql
+Copy
+Edit
+Line one
+Inserted before line 2
+Line two
+Line three
+2. a – Append after
+bash
+Copy
+Edit
+sed '2a\Appended after line 2' file.txt
+Output:
+
+pgsql
+Copy
+Edit
+Line one
+Line two
+Appended after line 2
+Line three
+3. c – Change line
+bash
+Copy
+Edit
+sed '2c\Replaced line 2' file.txt
+Output:
+
+scss
+Copy
+Edit
+Line one
+Replaced line 2
+Line three
+4. d – Delete line
+bash
+Copy
+Edit
+sed '2d' file.txt
+Output:
+
+scss
+Copy
+Edit
+Line one
+Line three
+5. s – Substitute text
+bash
+Copy
+Edit
+sed 's/Line/New/' file.txt
+Input:
+
+scss
+Copy
+Edit
+Line one
+Line two
+Output:
+
+sql
+Copy
+Edit
+New one
+New two
+6. n – Read/print the next line
+bash
+Copy
+Edit
+sed 'n' file.txt
+Input:
+
+css
+Copy
+Edit
+A
+B
+C
+D
+Output (prints every second line):
+
+css
+Copy
+Edit
+B
+D
+n skips printing current line, then reads and prints the next. By default, sed prints all lines unless -n is used.
+
+7. e – Execute shell command (GNU sed only)
+bash
+Copy
+Edit
+sed '3e echo "Line 3 executed a command"' file.txt
+Input:
+
+nginx
+Copy
+Edit
+L1
+L2
+L3
+Output:
+
+bash
+Copy
+Edit
+L1
+L2
+L3
+Line 3 executed a command
+8. p – Print line
+bash
+Copy
+Edit
+sed -n '2p' file.txt
+Output:
+
+scss
+Copy
+Edit
+Line two
+9. q – Quit after a line
+bash
+Copy
+Edit
+sed '2q' file.txt
+Output:
+
+scss
+Copy
+Edit
+Line one
+Line two
+Stops reading after line 2.
+
+📌 Bonus: Combine Commands
+bash
+Copy
+Edit
+sed -e '2s/Line/Updated/' -e '3d' file.txt
+Input:
+
+scss
+Copy
+Edit
+Line one
+Line two
+Line three
+Line four
+Output:
+
+scss
+Copy
+Edit
+Line one
+Updated two
+Line four
+----------------------------------------------------------------------------------------------------------------------
