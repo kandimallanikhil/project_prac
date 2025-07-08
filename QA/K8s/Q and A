@@ -434,3 +434,135 @@ strategy:
   type: Recreate
 
 ----------------------------------------------------------------------------------------------------------------------
+✅ Kubernetes PV & PVC Summary
+🔹 What is a PV (PersistentVolume)?
+A pre-created storage volume in the cluster.
+
+Created by admins or automatically using a StorageClass.
+
+Not attached to any pod by default.
+
+🔹 What is a PVC (PersistentVolumeClaim)?
+A request for storage made by a pod.
+
+When a PVC matches a PV (by size, access mode, etc.), Kubernetes binds them.
+
+🔸 Key Behavior:
+A PV can only be bound to one PVC.
+
+Even if the PVC requests less than the PV's size, the entire PV is reserved.
+
+Unused space in a PV cannot be used by other pods.
+
+To manage space efficiently, use dynamic provisioning with a StorageClass, which creates PVs of the exact size requested.
+
+🧠 Example:
+Resource	Size	Bound To	Notes
+PV	10 Gi	PVC A	PVC A only asked for 5 Gi, but takes the full 10 Gi
+PVC B	5 Gi	❌	Will not bind to PV (already taken)
+
+✅ Best Practice:
+Use dynamic provisioning so Kubernetes automatically creates just the right-sized volume per PVC request.
+=--------------------
+🧠 Important Concept:
+A PersistentVolume (PV) can only be bound to ONE PersistentVolumeClaim (PVC).
+
+Even if the PV is 10 GB and the PVC only asks for 5 GB, the entire PV is considered "used" once it's bound.
+
+Kubernetes doesn’t share PVs across PVCs.
+
+You cannot use the "leftover" 5 GB in that PV for another PVC.
+-------------------------
+What Happens?
+Kubernetes binds the full PV to the PVC.
+
+Even though the pod only asked for 5 GB, no other PVC can use the remaining 5 GB.
+
+The full 10 GB is now reserved for that one PVC.
+
+✔️ The pod can use up to 10 GB (not just 5), because it's bound to the full PV.
+-----------------------------------------
+What is Dynamic Provisioning?
+With dynamic provisioning, Kubernetes automatically creates a PersistentVolume (PV) when you create a PVC — no need to create the PV yourself.
+
+It uses a StorageClass, which defines the type and behavior of the storage (e.g., AWS EBS, GCP PD, local SSD, etc.).
+
+✅ Steps to Use Dynamic Provisioning
+🧾 1. Check Available StorageClasses
+Run this command in your cluster:
+
+bash
+Copy
+Edit
+kubectl get storageclass
+You might see output like:
+
+bash
+Copy
+Edit
+NAME            PROVISIONER             DEFAULT
+gp2             kubernetes.io/aws-ebs   Yes
+standard        pd.csi.storage.gke.io   No
+The one with (default) will be used if you don’t specify a storageClassName.
+
+🧾 2. Create a PVC That Uses a StorageClass
+yaml
+Copy
+Edit
+# file: pvc-dynamic.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-dynamic-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: gp2  # Use the class from step 1
+✅ This tells Kubernetes:
+
+“Create a 5Gi PV automatically using the gp2 storage class (e.g., AWS EBS).”
+
+🧾 3. Use the PVC in a Pod
+yaml
+Copy
+Edit
+# file: pod-using-pvc.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-using-pvc
+spec:
+  containers:
+    - name: app
+      image: nginx
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: html-volume
+  volumes:
+    - name: html-volume
+      persistentVolumeClaim:
+        claimName: my-dynamic-pvc
+🧾 4. Apply the YAML Files
+bash
+Copy
+Edit
+kubectl apply -f pvc-dynamic.yaml
+kubectl apply -f pod-using-pvc.yaml
+Kubernetes will:
+
+Automatically create a PV using the StorageClass.
+
+Bind the PVC to that new PV.
+
+Your pod will use that storage.
+
+✅ Benefits of Dynamic Provisioning
+Feature	Benefit
+No manual PV creation	Less work, fewer errors
+Automatic right-size volumes	Avoid wasted storage
+Supports many backends	EBS, GCE PD, NFS, Ceph, etc.
+Clean-up on deletion	Optional (based on reclaim policy)
+
