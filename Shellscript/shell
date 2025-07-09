@@ -1,3 +1,104 @@
+| Option        | Meaning                                                                     | Common Use      |
+| ------------- | --------------------------------------------------------------------------- | --------------- |
+| `-e`          | Exit script immediately if a command fails                                  | ✅ Recommended   |
+| `-u`          | Treat unset variables as errors and exit                                    | ✅ Recommended   |
+| `-x`          | Print each command before executing it (debug mode)                         | ✅ For debugging |
+| `-o pipefail` | Causes a pipeline to return the exit status of the **first failed** command | ✅ Recommended   |
+------------------------------------------------------------------------------------------------------------------
+In shell scripting (typically Bash), the `set` command is used to modify the behavior of the shell. Some common options include `-x`, `-e`, `-u`, and others. Here's a breakdown of the most commonly used ones:
+
+---
+
+### ✅ `set -x`: Debug Trace Mode
+
+* **What it does**: Prints each command (with arguments) to the terminal **before** executing it.
+* **Use case**: Useful for debugging scripts.
+* **Example**:
+
+  ```bash
+  set -x
+  echo "Hello"
+  ls /not/a/path
+  set +x
+  ```
+
+---
+
+### ✅ `set -e`: Exit on Error
+
+* **What it does**: Causes the script to immediately exit if any command returns a non-zero status.
+* **Use case**: Helps catch errors early instead of continuing with potentially bad data.
+* **Example**:
+
+  ```bash
+  set -e
+  cp file.txt /nonexistent/dir  # Script exits here if this fails
+  echo "This won't run"
+  ```
+
+---
+
+### ✅ `set -u`: Treat Unset Variables as Errors
+
+* **What it does**: If you try to use an undefined variable, the script will exit.
+* **Use case**: Prevents subtle bugs caused by typos or missing variables.
+* **Example**:
+
+  ```bash
+  set -u
+  echo "Value: $UNDEFINED_VAR"  # Causes an error and exits
+  ```
+
+---
+
+### ✅ `set -o pipefail`: Catch Errors in Pipelines
+
+* **What it does**: Makes the pipeline return a failure if **any** command in the pipeline fails.
+* **Use case**: Ensures you catch pipeline failures that might otherwise go unnoticed.
+* **Example**:
+
+  ```bash
+  set -o pipefail
+  grep something file.txt | sort | head  # If grep fails, the whole pipeline fails
+  ```
+
+---
+
+### ✅ Combine Them (Best Practice)
+
+You often see this combo at the top of scripts:
+
+```bash
+#!/bin/bash
+set -euo pipefail
+```
+
+Or for debugging:
+
+```bash
+#!/bin/bash
+set -euxo pipefail
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Shell Scripting main Command for day-to-day activities: 
 --- >>                  awk '{print $2}' -- All lines
 Key Differences:  If we use this this will show All lines present in that “Column = 2 “ 
